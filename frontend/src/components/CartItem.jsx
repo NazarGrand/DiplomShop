@@ -1,61 +1,160 @@
+/** @jsxImportSource theme-ui */
+import { Box } from "theme-ui";
 import { Minus, Plus, Trash } from "lucide-react";
 import { useCartStore } from "../stores/useCartStore";
 
 const CartItem = ({ item }) => {
-	const { removeFromCart, updateQuantity } = useCartStore();
+  const { removeFromCart, updateQuantity } = useCartStore();
 
-	return (
-		<div className='rounded-lg border p-4 shadow-sm border-gray-700 bg-gray-800 md:p-6'>
-			<div className='space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0'>
-				<div className='shrink-0 md:order-1'>
-					<img className='h-20 md:h-32 rounded object-cover' src={item.image} />
-				</div>
-				<label className='sr-only'>Choose quantity:</label>
-
-				<div className='flex items-center justify-between md:order-3 md:justify-end'>
-					<div className='flex items-center gap-2'>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2
-							  focus:ring-emerald-500'
-							onClick={() => updateQuantity(item._id, item.quantity - 1)}
-						>
-							<Minus className='text-gray-300' />
-						</button>
-						<p>{item.quantity}</p>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none 
-						focus:ring-2 focus:ring-emerald-500'
-							onClick={() => updateQuantity(item._id, item.quantity + 1)}
-						>
-							<Plus className='text-gray-300' />
-						</button>
-					</div>
-
-					<div className='text-end md:order-4 md:w-32'>
-						<p className='text-base font-bold text-emerald-400'>${item.price}</p>
-					</div>
-				</div>
-
-				<div className='w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md'>
-					<p className='text-base font-medium text-white hover:text-emerald-400 hover:underline'>
-						{item.name}
-					</p>
-					<p className='text-sm text-gray-400'>{item.description}</p>
-
-					<div className='flex items-center gap-4'>
-						<button
-							className='inline-flex items-center text-sm font-medium text-red-400
-							 hover:text-red-300 hover:underline'
-							onClick={() => removeFromCart(item._id)}
-						>
-							<Trash />
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <Box
+      className="cart-item"
+      sx={{
+        borderRadius: "lg",
+        border: "1px solid",
+        borderColor: "gray700",
+        p: [4, 6],
+        boxShadow: "soft",
+        bg: "gray800",
+        ".cart-item-content": {
+          display: "flex",
+          flexDirection: ["column", "row"],
+          gap: [4, 6],
+          alignItems: "center",
+          justifyContent: "space-between",
+          ".cart-item-image": {
+            flexShrink: 0,
+            order: [1, 1],
+            "& img": {
+              height: ["80px", "128px"],
+              borderRadius: "md",
+              objectFit: "cover",
+            },
+          },
+          ".cart-item-info": {
+            width: "100%",
+            minWidth: 0,
+            flex: 1,
+            order: [2, 2],
+            maxWidth: ["100%", "28rem"],
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            ".cart-item-name": {
+              fontSize: "1rem",
+              fontWeight: 500,
+              color: "white",
+              "&:hover": {
+                color: "emerald400",
+                textDecoration: "underline",
+              },
+            },
+            ".cart-item-description": {
+              fontSize: "0.875rem",
+              color: "gray400",
+            },
+            ".cart-item-remove": {
+              display: "inline-flex",
+              alignItems: "center",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "#F87171",
+              cursor: "pointer",
+              "&:hover": {
+                color: "#FCA5A5",
+                textDecoration: "underline",
+              },
+            },
+          },
+          ".cart-item-controls": {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            order: [3, 3],
+            width: ["100%", "auto"],
+            ".quantity-controls": {
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              ".quantity-button": {
+                display: "inline-flex",
+                height: "20px",
+                width: "20px",
+                flexShrink: 0,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "md",
+                border: "1px solid",
+                borderColor: "gray600",
+                bg: "gray700",
+                cursor: "pointer",
+                "&:hover": {
+                  bg: "gray600",
+                },
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "0 0 0 2px rgba(16, 185, 129, 0.5)",
+                },
+                ".button-icon": {
+                  color: "gray300",
+                },
+              },
+              ".quantity-value": {
+                fontSize: "1rem",
+                color: "white",
+              },
+            },
+            ".cart-item-price": {
+              textAlign: "end",
+              width: ["auto", "128px"],
+              order: [4, 4],
+              ".price-value": {
+                fontSize: "1rem",
+                fontWeight: 700,
+                color: "emerald400",
+              },
+            },
+          },
+        },
+      }}
+    >
+      <div className="cart-item-content">
+        <div className="cart-item-image">
+          <img src={item.image} alt={item.name} />
+        </div>
+        <div className="cart-item-info">
+          <p className="cart-item-name">{item.name}</p>
+          <p className="cart-item-description">{item.description}</p>
+          <button
+            className="cart-item-remove"
+            onClick={() => removeFromCart(item._id)}
+          >
+            <Trash />
+          </button>
+        </div>
+        <div className="cart-item-controls">
+          <div className="quantity-controls">
+            <button
+              className="quantity-button"
+              onClick={() => updateQuantity(item._id, item.quantity - 1)}
+            >
+              <Minus className="button-icon" />
+            </button>
+            <p className="quantity-value">{item.quantity}</p>
+            <button
+              className="quantity-button"
+              onClick={() => updateQuantity(item._id, item.quantity + 1)}
+            >
+              <Plus className="button-icon" />
+            </button>
+          </div>
+          <div className="cart-item-price">
+            <p className="price-value">${item.price}</p>
+          </div>
+        </div>
+      </div>
+    </Box>
+  );
 };
+
 export default CartItem;

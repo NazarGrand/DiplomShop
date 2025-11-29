@@ -1,91 +1,209 @@
+/** @jsxImportSource theme-ui */
+import classNames from "classnames";
 import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
 const Navbar = () => {
-	const { user, logout } = useUserStore();
-	const isAdmin = user?.role === "admin";
-	const { cart } = useCartStore();
+  const { user, logout } = useUserStore();
+  const isAdmin = user?.role === "admin";
+  const { cart } = useCartStore();
 
-	return (
-		<header className='fixed top-0 left-0 w-full bg-gray-900 bg-opacity-90 backdrop-blur-md shadow-lg z-40 transition-all duration-300 border-b border-emerald-800'>
-			<div className='container mx-auto px-4 py-3'>
-				<div className='flex flex-wrap justify-between items-center'>
-					<Link to='/' className='text-2xl font-bold text-emerald-400 items-center space-x-2 flex'>
-						E-Commerce
-					</Link>
+  return (
+    <header
+      className="navbar"
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        bg: "rgba(17, 24, 39, 0.9)",
+        backdropFilter: "blur(12px)",
+        boxShadow: "medium",
+        zIndex: 40,
+        transition: "all 0.3s ease",
+        borderBottom: "1px solid",
+        borderColor: "emerald800",
+        ".navbar-container": {
+          maxWidth: "1280px",
+          mx: "auto",
+          px: 4,
+          py: 3,
+          ".navbar-content": {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            ".navbar-logo": {
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              color: "emerald400",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              textDecoration: "none",
+            },
+            ".navbar-nav": {
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 4,
+              ".nav-link": {
+                color: "gray300",
+                textDecoration: "none",
+                transition: "color 0.3s ease-in-out",
+                "&:hover": {
+                  color: "emerald400",
+                },
+              },
+              ".cart-link": {
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                color: "gray300",
+                textDecoration: "none",
+                transition: "color 0.3s ease-in-out",
+                "&:hover": {
+                  color: "emerald400",
+                  ".cart-icon": {
+                    color: "emerald400",
+                  },
+                },
+                ".cart-icon": {
+                  display: "inline-block",
+                  mr: 1,
+                  transition: "color 0.3s ease-in-out",
+                },
+                ".cart-text": {
+                  display: ["none", "inline"],
+                },
+                ".cart-badge": {
+                  position: "absolute",
+                  top: "-8px",
+                  left: "-8px",
+                  bg: "emerald500",
+                  color: "white",
+                  borderRadius: "full",
+                  px: 2,
+                  py: "2px",
+                  fontSize: "0.75rem",
+                  transition: "background-color 0.3s ease-in-out",
+                  "&:hover": {
+                    bg: "emerald400",
+                  },
+                },
+              },
+              ".nav-button": {
+                display: "flex",
+                alignItems: "center",
+                px: [3, 4],
+                py: [1, 2],
+                borderRadius: "md",
+                fontWeight: 500,
+                transition: "all 0.3s ease-in-out",
+                textDecoration: "none",
+                border: "none",
+                cursor: "pointer",
+                "&.primary": {
+                  bg: "emerald700",
+                  color: "white",
+                  "&:hover": {
+                    bg: "emerald600",
+                  },
+                  ".button-icon": {
+                    display: "inline-block",
+                    mr: 1,
+                  },
+                  ".button-text": {
+                    display: ["none", "inline"],
+                  },
+                },
+                "&.secondary": {
+                  bg: "gray700",
+                  color: "white",
+                  "&:hover": {
+                    bg: "gray600",
+                  },
+                  ".button-icon": {
+                    mr: 2,
+                  },
+                  ".button-text": {
+                    display: ["none", "inline"],
+                    ml: 2,
+                  },
+                },
+                "&.signup": {
+                  bg: "emerald600",
+                  "&:hover": {
+                    bg: "emerald700",
+                  },
+                },
+              },
+            },
+          },
+        },
+      }}
+    >
+      <div className="navbar-container">
+        <div className="navbar-content">
+          <Link to="/" className="navbar-logo">
+            E-Commerce
+          </Link>
 
-					<nav className='flex flex-wrap items-center gap-4'>
-						<Link
-							to={"/"}
-							className='text-gray-300 hover:text-emerald-400 transition duration-300
-					 ease-in-out'
-						>
-							Home
-						</Link>
-						{user && (
-							<Link
-								to={"/cart"}
-								className='relative group text-gray-300 hover:text-emerald-400 transition duration-300 
-							ease-in-out'
-							>
-								<ShoppingCart className='inline-block mr-1 group-hover:text-emerald-400' size={20} />
-								<span className='hidden sm:inline'>Cart</span>
-								{cart.length > 0 && (
-									<span
-										className='absolute -top-2 -left-2 bg-emerald-500 text-white rounded-full px-2 py-0.5 
-									text-xs group-hover:bg-emerald-400 transition duration-300 ease-in-out'
-									>
-										{cart.length}
-									</span>
-								)}
-							</Link>
-						)}
-						{isAdmin && (
-							<Link
-								className='bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium
-								 transition duration-300 ease-in-out flex items-center'
-								to={"/secret-dashboard"}
-							>
-								<Lock className='inline-block mr-1' size={18} />
-								<span className='hidden sm:inline'>Dashboard</span>
-							</Link>
-						)}
-
-						{user ? (
-							<button
-								className='bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 
-						rounded-md flex items-center transition duration-300 ease-in-out'
-								onClick={logout}
-							>
-								<LogOut size={18} />
-								<span className='hidden sm:inline ml-2'>Log Out</span>
-							</button>
-						) : (
-							<>
-								<Link
-									to={"/signup"}
-									className='bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 
-									rounded-md flex items-center transition duration-300 ease-in-out'
-								>
-									<UserPlus className='mr-2' size={18} />
-									Sign Up
-								</Link>
-								<Link
-									to={"/login"}
-									className='bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 
-									rounded-md flex items-center transition duration-300 ease-in-out'
-								>
-									<LogIn className='mr-2' size={18} />
-									Login
-								</Link>
-							</>
-						)}
-					</nav>
-				</div>
-			</div>
-		</header>
-	);
+          <nav className="navbar-nav">
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
+            {user && (
+              <Link to="/cart" className="cart-link">
+                <ShoppingCart className="cart-icon" size={20} />
+                <span className="cart-text">Cart</span>
+                {cart.length > 0 && (
+                  <span className="cart-badge">{cart.length}</span>
+                )}
+              </Link>
+            )}
+            {isAdmin && (
+              <Link
+                to="/secret-dashboard"
+                className={classNames("nav-button", "primary")}
+              >
+                <Lock className="button-icon" size={18} />
+                <span className="button-text">Dashboard</span>
+              </Link>
+            )}
+            {user ? (
+              <button
+                className={classNames("nav-button", "secondary")}
+                onClick={logout}
+              >
+                <LogOut size={18} />
+                <span className="button-text">Log Out</span>
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className={classNames("nav-button", "primary", "signup")}
+                >
+                  <UserPlus className="button-icon" size={18} />
+                  Sign Up
+                </Link>
+                <Link
+                  to="/login"
+                  className={classNames("nav-button", "secondary")}
+                >
+                  <LogIn className="button-icon" size={18} />
+                  Login
+                </Link>
+              </>
+            )}
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
 };
+
 export default Navbar;

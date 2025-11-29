@@ -1,25 +1,77 @@
+/** @jsxImportSource theme-ui */
+import { Box } from "theme-ui";
 import { Link } from "react-router-dom";
 
 const CategoryItem = ({ category }) => {
-	return (
-		<div className='relative overflow-hidden h-96 w-full rounded-lg group'>
-			<Link to={"/category" + category.href}>
-				<div className='w-full h-full cursor-pointer'>
-					<div className='absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 opacity-50 z-10' />
-					<img
-						src={category.imageUrl}
-						alt={category.name}
-						className='w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110'
-						loading='lazy'
-					/>
-					<div className='absolute bottom-0 left-0 right-0 p-4 z-20'>
-						<h3 className='text-white text-2xl font-bold mb-2'>{category.name}</h3>
-						<p className='text-gray-200 text-sm'>Explore {category.name}</p>
-					</div>
-				</div>
-			</Link>
-		</div>
-	);
+  return (
+    <Box
+      className="category-item"
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        height: "384px",
+        width: "100%",
+        borderRadius: "lg",
+        "&:hover": {
+          ".category-image": {
+            transform: "scale(1.1)",
+          },
+        },
+        ".category-link": {
+          display: "block",
+          width: "100%",
+          height: "100%",
+          cursor: "pointer",
+          position: "relative",
+          ".category-overlay": {
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%)",
+            zIndex: 10,
+          },
+          ".category-image": {
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transition: "transform 0.5s ease-out",
+          },
+          ".category-content": {
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            p: 4,
+            zIndex: 20,
+            ".category-title": {
+              color: "white",
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              mb: 2,
+            },
+            ".category-description": {
+              color: "rgba(229, 231, 235, 1)",
+              fontSize: "0.875rem",
+            },
+          },
+        },
+      }}
+    >
+      <Link to={"/category" + category.href} className="category-link">
+        <div className="category-overlay" />
+        <img
+          src={category.imageUrl}
+          alt={category.name}
+          className="category-image"
+          loading="lazy"
+        />
+        <div className="category-content">
+          <h3 className="category-title">{category.name}</h3>
+          <p className="category-description">Explore {category.name}</p>
+        </div>
+      </Link>
+    </Box>
+  );
 };
 
 export default CategoryItem;

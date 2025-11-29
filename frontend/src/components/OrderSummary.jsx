@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
 import { Link } from "react-router-dom";
@@ -6,102 +7,194 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "../lib/axios";
 
 const stripePromise = loadStripe(
-  "pk_test_51SYO3gRlJ2mGTNHuHYieNyIHQs5h3tH0rbzwjybUnWZ72baZiHoT3gBqq8EaXDXna1EwZiAPhzfqbyXMJ5WiWNPq00EjO9EieW"
+	"pk_test_51SYO3gRlJ2mGTNHuHYieNyIHQs5h3tH0rbzwjybUnWZ72baZiHoT3gBqq8EaXDXna1EwZiAPhzfqbyXMJ5WiWNPq00EjO9EieW"
 );
 
 const OrderSummary = () => {
-  const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
+	const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
 
-  const savings = subtotal - total;
-  const formattedSubtotal = subtotal.toFixed(2);
-  const formattedTotal = total.toFixed(2);
-  const formattedSavings = savings.toFixed(2);
+	const savings = subtotal - total;
+	const formattedSubtotal = subtotal.toFixed(2);
+	const formattedTotal = total.toFixed(2);
+	const formattedSavings = savings.toFixed(2);
 
-  const handlePayment = async () => {
-    const stripe = await stripePromise;
-    const res = await axios.post("/payments/create-checkout-session", {
-      products: cart,
-      couponCode: coupon ? coupon.code : null,
-    });
+	const handlePayment = async () => {
+		const stripe = await stripePromise;
+		const res = await axios.post("/payments/create-checkout-session", {
+			products: cart,
+			couponCode: coupon ? coupon.code : null,
+		});
 
-    const session = res.data;
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
+		const session = res.data;
+		const result = await stripe.redirectToCheckout({
+			sessionId: session.id,
+		});
 
-    if (result.error) {
-      console.error("Error:", result.error);
-    }
-  };
+		if (result.error) {
+			console.error("Error:", result.error);
+		}
+	};
 
-  return (
-    <motion.div
-      className="space-y-4 rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <p className="text-xl font-semibold text-emerald-400">Order summary</p>
+	return (
+		<motion.div
+			className="order-summary"
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.5 }}
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				gap: 4,
+				borderRadius: "lg",
+				border: "1px solid",
+				borderColor: "gray700",
+				bg: "gray800",
+				p: [4, 6],
+				boxShadow: "soft",
+				".order-title": {
+					fontSize: "1.25rem",
+					fontWeight: 600,
+					color: "emerald400",
+				},
+				".order-details": {
+					display: "flex",
+					flexDirection: "column",
+					gap: 4,
+					".order-items": {
+						display: "flex",
+						flexDirection: "column",
+						gap: 2,
+						".order-row": {
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "space-between",
+							gap: 4,
+							".order-label": {
+								fontSize: "1rem",
+								fontWeight: 400,
+								color: "gray300",
+							},
+							".order-value": {
+								fontSize: "1rem",
+								fontWeight: 500,
+								color: "white",
+							},
+							"&.savings .order-value": {
+								color: "emerald400",
+							},
+							"&.total": {
+								borderTop: "1px solid",
+								borderColor: "gray600",
+								pt: 2,
+								".order-label": {
+									fontWeight: 700,
+									color: "white",
+								},
+								".order-value": {
+									fontWeight: 700,
+									color: "emerald400",
+								},
+							},
+						},
+					},
+				},
+				".checkout-button": {
+					display: "flex",
+					width: "100%",
+					alignItems: "center",
+					justifyContent: "center",
+					borderRadius: "lg",
+					bg: "emerald600",
+					px: 5,
+					py: 2.5,
+					fontSize: "0.875rem",
+					fontWeight: 500,
+					color: "white",
+					cursor: "pointer",
+					border: "none",
+					transition: "all 0.2s ease",
+					"&:hover": {
+						bg: "emerald700",
+					},
+					"&:focus": {
+						outline: "none",
+						boxShadow: "0 0 0 4px rgba(16, 185, 129, 0.3)",
+					},
+				},
+				".continue-shopping": {
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					gap: 2,
+					".continue-text": {
+						fontSize: "0.875rem",
+						fontWeight: 400,
+						color: "gray400",
+					},
+					".continue-link": {
+						display: "inline-flex",
+						alignItems: "center",
+						gap: 2,
+						fontSize: "0.875rem",
+						fontWeight: 500,
+						color: "emerald400",
+						textDecoration: "underline",
+						"&:hover": {
+							color: "rgba(16, 185, 129, 0.8)",
+							textDecoration: "none",
+						},
+					},
+				},
+			}}
+		>
+			<p className="order-title">Order summary</p>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <dl className="flex items-center justify-between gap-4">
-            <dt className="text-base font-normal text-gray-300">
-              Original price
-            </dt>
-            <dd className="text-base font-medium text-white">
-              ${formattedSubtotal}
-            </dd>
-          </dl>
+			<div className="order-details">
+				<div className="order-items">
+					<dl className="order-row">
+						<dt className="order-label">Original price</dt>
+						<dd className="order-value">${formattedSubtotal}</dd>
+					</dl>
 
-          {savings > 0 && (
-            <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-300">Savings</dt>
-              <dd className="text-base font-medium text-emerald-400">
-                -${formattedSavings}
-              </dd>
-            </dl>
-          )}
+					{savings > 0 && (
+						<dl className="order-row savings">
+							<dt className="order-label">Savings</dt>
+							<dd className="order-value">-${formattedSavings}</dd>
+						</dl>
+					)}
 
-          {coupon && isCouponApplied && (
-            <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-300">
-                Coupon ({coupon.code})
-              </dt>
-              <dd className="text-base font-medium text-emerald-400">
-                -{coupon.discountPercentage}%
-              </dd>
-            </dl>
-          )}
-          <dl className="flex items-center justify-between gap-4 border-t border-gray-600 pt-2">
-            <dt className="text-base font-bold text-white">Total</dt>
-            <dd className="text-base font-bold text-emerald-400">
-              ${formattedTotal}
-            </dd>
-          </dl>
-        </div>
+					{coupon && isCouponApplied && (
+						<dl className="order-row">
+							<dt className="order-label">Coupon ({coupon.code})</dt>
+							<dd className="order-value">-{coupon.discountPercentage}%</dd>
+						</dl>
+					)}
 
-        <motion.button
-          className="flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handlePayment}
-        >
-          Proceed to Checkout
-        </motion.button>
+					<dl className="order-row total">
+						<dt className="order-label">Total</dt>
+						<dd className="order-value">${formattedTotal}</dd>
+					</dl>
+				</div>
+			</div>
 
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-sm font-normal text-gray-400">or</span>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-400 underline hover:text-emerald-300 hover:no-underline"
-          >
-            Continue Shopping
-            <MoveRight size={16} />
-          </Link>
-        </div>
-      </div>
-    </motion.div>
-  );
+			<motion.button
+				className="checkout-button"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={handlePayment}
+			>
+				Proceed to Checkout
+			</motion.button>
+
+			<div className="continue-shopping">
+				<span className="continue-text">or</span>
+				<Link to="/" className="continue-link">
+					Continue Shopping
+					<MoveRight size={16} />
+				</Link>
+			</div>
+		</motion.div>
+	);
 };
+
 export default OrderSummary;
