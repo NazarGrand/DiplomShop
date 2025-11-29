@@ -37,7 +37,7 @@ const Navbar = () => {
             justifyContent: "space-between",
             alignItems: "center",
             ".navbar-logo": {
-              fontSize: "1.5rem",
+              fontSize: "2.5rem",
               fontWeight: 900,
               color: "emerald400",
               display: "flex",
