@@ -1,49 +1,86 @@
+/** @jsxImportSource theme-ui */
 import { useEffect } from "react";
 import { useProductStore } from "../stores/useProductStore";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Box } from "theme-ui";
 import ProductCard from "../components/ProductCard";
 
 const CategoryPage = () => {
-	const { fetchProductsByCategory, products } = useProductStore();
+  const { fetchProductsByCategory, products } = useProductStore();
+  const { category } = useParams();
 
-	const { category } = useParams();
+  useEffect(() => {
+    fetchProductsByCategory(category);
+  }, [fetchProductsByCategory, category]);
 
-	useEffect(() => {
-		fetchProductsByCategory(category);
-	}, [fetchProductsByCategory, category]);
+  console.log("products:", products);
+  return (
+    <Box
+      className="category-page"
+      sx={{
+        minHeight: "100vh",
+        ".category-container": {
+          position: "relative",
+          zIndex: 10,
+          maxWidth: "1280px",
+          mx: "auto",
+          px: ["1rem", "1.5rem", "2rem"],
+          py: 16,
+          ".category-title": {
+            textAlign: "center",
+            fontSize: ["2.25rem", "3rem"],
+            fontWeight: 700,
+            color: "emerald400",
+          },
+          ".products-grid": {
+            display: "grid",
+            gridTemplateColumns: [
+              "1fr",
+              "repeat(2, 1fr)",
+              "repeat(3, 1fr)",
+              "repeat(4, 1fr)",
+            ],
+            gap: 2,
+            justifyItems: "center",
+            ".empty-message": {
+              gridColumn: "1 / -1",
+              fontSize: "1.875rem",
+              fontWeight: 600,
+              color: "gray300",
+              textAlign: "center",
+            },
+          },
+        },
+      }}
+    >
+      <div className="category-container">
+        <motion.h1
+          className="category-title"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          {category.charAt(0).toUpperCase() + category.slice(1)}
+        </motion.h1>
 
-	console.log("products:", products);
-	return (
-		<div className='min-h-screen'>
-			<div className='relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
-				<motion.h1
-					className='text-center text-4xl sm:text-5xl font-bold text-emerald-400 mb-8'
-					initial={{ opacity: 0, y: -20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8 }}
-				>
-					{category.charAt(0).toUpperCase() + category.slice(1)}
-				</motion.h1>
+        <motion.div
+          className="products-grid"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          {products?.length === 0 && (
+            <h2 className="empty-message">No products found</h2>
+          )}
 
-				<motion.div
-					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center'
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8, delay: 0.2 }}
-				>
-					{products?.length === 0 && (
-						<h2 className='text-3xl font-semibold text-gray-300 text-center col-span-full'>
-							No products found
-						</h2>
-					)}
-
-					{products?.map((product) => (
-						<ProductCard key={product._id} product={product} />
-					))}
-				</motion.div>
-			</div>
-		</div>
-	);
+          {products?.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </motion.div>
+      </div>
+    </Box>
+  );
 };
+
 export default CategoryPage;

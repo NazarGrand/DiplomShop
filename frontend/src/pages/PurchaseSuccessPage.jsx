@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -6,94 +7,209 @@ import axios from "../lib/axios";
 import Confetti from "react-confetti";
 
 const PurchaseSuccessPage = () => {
-	const [isProcessing, setIsProcessing] = useState(true);
-	const { clearCart } = useCartStore();
-	const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(true);
+  const { clearCart } = useCartStore();
+  const [error, setError] = useState(null);
 
-	useEffect(() => {
-		const handleCheckoutSuccess = async (sessionId) => {
-			try {
-				await axios.post("/payments/checkout-success", {
-					sessionId,
-				});
-				clearCart();
-			} catch (error) {
-				console.log(error);
-			} finally {
-				setIsProcessing(false);
-			}
-		};
+  useEffect(() => {
+    const handleCheckoutSuccess = async (sessionId) => {
+      try {
+        await axios.post("/payments/checkout-success", {
+          sessionId,
+        });
+        clearCart();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
 
-		const sessionId = new URLSearchParams(window.location.search).get("session_id");
-		if (sessionId) {
-			handleCheckoutSuccess(sessionId);
-		} else {
-			setIsProcessing(false);
-			setError("No session ID found in the URL");
-		}
-	}, [clearCart]);
+    const sessionId = new URLSearchParams(window.location.search).get(
+      "session_id"
+    );
+    if (sessionId) {
+      handleCheckoutSuccess(sessionId);
+    } else {
+      setIsProcessing(false);
+      setError("No session ID found in the URL");
+    }
+  }, [clearCart]);
 
-	if (isProcessing) return "Processing...";
+  if (isProcessing) return "Processing...";
 
-	if (error) return `Error: ${error}`;
+  if (error) return `Error: ${error}`;
 
-	return (
-		<div className='h-screen flex items-center justify-center px-4'>
-			<Confetti
-				width={window.innerWidth}
-				height={window.innerHeight}
-				gravity={0.1}
-				style={{ zIndex: 99 }}
-				numberOfPieces={700}
-				recycle={false}
-			/>
+  return (
+    <div
+      className="purchase-success-page"
+      sx={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        px: 4,
+        ".success-card": {
+          maxWidth: "28rem",
+          width: "100%",
+          bg: "gray800",
+          borderRadius: "lg",
+          boxShadow: "strong",
+          overflow: "hidden",
+          position: "relative",
+          zIndex: 10,
+          ".success-content": {
+            p: [6, 8],
+            ".success-icon": {
+              display: "flex",
+              justifyContent: "center",
+              "& svg": {
+                color: "emerald400",
+                width: "64px",
+                height: "64px",
+                mb: 4,
+              },
+            },
+            ".success-title": {
+              fontSize: ["1.5rem", "1.875rem"],
+              fontWeight: 700,
+              textAlign: "center",
+              color: "emerald400",
+              mb: 2,
+            },
+            ".success-text": {
+              color: "gray300",
+              textAlign: "center",
+              mb: 2,
+            },
+            ".success-subtext": {
+              color: "emerald400",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              mb: 6,
+            },
+            ".order-info": {
+              bg: "gray700",
+              borderRadius: "lg",
+              p: 4,
+              mb: 6,
+              ".order-row": {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 2,
+                "&:last-child": {
+                  mb: 0,
+                },
+                ".order-label": {
+                  fontSize: "0.875rem",
+                  color: "gray400",
+                },
+                ".order-value": {
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  color: "emerald400",
+                },
+              },
+            },
+            ".success-actions": {
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+              ".action-button": {
+                width: "100%",
+                bg: "emerald600",
+                "&:hover": {
+                  bg: "emerald700",
+                },
+                color: "white",
+                fontWeight: 700,
+                py: 2,
+                px: 4,
+                borderRadius: "lg",
+                transition: "background-color 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                border: "none",
+                textDecoration: "none",
+                ".button-icon": {
+                  mr: 2,
+                },
+              },
+              ".continue-link": {
+                width: "100%",
+                bg: "gray700",
+                "&:hover": {
+                  bg: "gray600",
+                },
+                color: "emerald400",
+                fontWeight: 700,
+                py: 2,
+                px: 4,
+                borderRadius: "lg",
+                transition: "background-color 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textDecoration: "none",
+                ".link-icon": {
+                  ml: 2,
+                },
+              },
+            },
+          },
+        },
+      }}
+    >
+      <Confetti
+        width={window.innerWidth}
+        height={window.innerHeight}
+        gravity={0.1}
+        style={{ zIndex: 99 }}
+        numberOfPieces={700}
+        recycle={false}
+      />
 
-			<div className='max-w-md w-full bg-gray-800 rounded-lg shadow-xl overflow-hidden relative z-10'>
-				<div className='p-6 sm:p-8'>
-					<div className='flex justify-center'>
-						<CheckCircle className='text-emerald-400 w-16 h-16 mb-4' />
-					</div>
-					<h1 className='text-2xl sm:text-3xl font-bold text-center text-emerald-400 mb-2'>
-						Purchase Successful!
-					</h1>
+      <div className="success-card">
+        <div className="success-content">
+          <div className="success-icon">
+            <CheckCircle />
+          </div>
+          <h1 className="success-title">Purchase Successful!</h1>
 
-					<p className='text-gray-300 text-center mb-2'>
-						Thank you for your order. {"We're"} processing it now.
-					</p>
-					<p className='text-emerald-400 text-center text-sm mb-6'>
-						Check your email for order details and updates.
-					</p>
-					<div className='bg-gray-700 rounded-lg p-4 mb-6'>
-						<div className='flex items-center justify-between mb-2'>
-							<span className='text-sm text-gray-400'>Order number</span>
-							<span className='text-sm font-semibold text-emerald-400'>#12345</span>
-						</div>
-						<div className='flex items-center justify-between'>
-							<span className='text-sm text-gray-400'>Estimated delivery</span>
-							<span className='text-sm font-semibold text-emerald-400'>3-5 business days</span>
-						</div>
-					</div>
+          <p className="success-text">
+            Thank you for your order. We're processing it now.
+          </p>
+          <p className="success-subtext">
+            Check your email for order details and updates.
+          </p>
+          <div className="order-info">
+            <div className="order-row">
+              <span className="order-label">Order number</span>
+              <span className="order-value">#12345</span>
+            </div>
+            <div className="order-row">
+              <span className="order-label">Estimated delivery</span>
+              <span className="order-value">3-5 business days</span>
+            </div>
+          </div>
 
-					<div className='space-y-4'>
-						<button
-							className='w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4
-             rounded-lg transition duration-300 flex items-center justify-center'
-						>
-							<HandHeart className='mr-2' size={18} />
-							Thanks for trusting us!
-						</button>
-						<Link
-							to={"/"}
-							className='w-full bg-gray-700 hover:bg-gray-600 text-emerald-400 font-bold py-2 px-4 
-            rounded-lg transition duration-300 flex items-center justify-center'
-						>
-							Continue Shopping
-							<ArrowRight className='ml-2' size={18} />
-						</Link>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+          <div className="success-actions">
+            <button className="action-button">
+              <HandHeart className="button-icon" size={18} />
+              Thanks for trusting us!
+            </button>
+            <Link to="/" className="continue-link">
+              Continue Shopping
+              <ArrowRight className="link-icon" size={18} />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
+
 export default PurchaseSuccessPage;

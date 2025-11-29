@@ -40,7 +40,7 @@ const GiftCouponCard = () => {
         border: "1px solid",
         borderColor: "gray700",
         bg: "gray800",
-        p: [4, 6],
+        p: 3,
         boxShadow: "soft",
         ".coupon-form": {
           display: "flex",
@@ -56,7 +56,7 @@ const GiftCouponCard = () => {
           ".coupon-input": {
             display: "block",
             width: "100%",
-            borderRadius: "lg",
+            borderRadius: "md",
             border: "1px solid",
             borderColor: "gray600",
             bg: "gray700",
@@ -80,7 +80,7 @@ const GiftCouponCard = () => {
             borderRadius: "lg",
             bg: "emerald600",
             px: 5,
-            py: 2.5,
+            py: 3,
             fontSize: "0.875rem",
             fontWeight: 500,
             color: "white",

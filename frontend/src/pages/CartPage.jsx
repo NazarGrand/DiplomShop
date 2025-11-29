@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
+import { Box } from "theme-ui";
 import CartItem from "../components/CartItem";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
 import OrderSummary from "../components/OrderSummary";
@@ -12,40 +13,40 @@ const CartPage = () => {
   const { cart } = useCartStore();
 
   return (
-    <div
+    <Box
       className="cart-page"
       sx={{
-        py: [8, 16],
+        py: 6,
         ".cart-container": {
           maxWidth: "1280px",
           mx: "auto",
-          px: [4, 0],
+          px: 2,
           ".cart-layout": {
-            mt: [6, 8],
+            mt: 2,
             display: "flex",
             flexDirection: ["column", "column", "row"],
-            gap: [6, 8],
-            alignItems: "flex-start",
+            gap: 2,
+            alignItems: ["stretch", "stretch", "flex-start"],
             ".cart-items-section": {
               mx: "auto",
               width: "100%",
               flex: "none",
-              maxWidth: ["100%", "100%", "768px", "1024px"],
+              maxWidth: ["100%", "100%", "672px", "896px"],
               ".cart-items-list": {
                 display: "flex",
                 flexDirection: "column",
-                gap: 6,
+                gap: 2,
               },
             },
             ".cart-sidebar": {
               mx: "auto",
-              mt: [6, 0],
-              maxWidth: ["100%", "100%", "512px"],
+              mt: [2, 0],
+              maxWidth: ["100%", "100%", "896px"],
               width: ["100%", "100%", "100%"],
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              gap: 6,
+              gap: 2,
             },
           },
         },
@@ -84,7 +85,7 @@ const CartPage = () => {
           )}
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 
@@ -101,8 +102,8 @@ const EmptyCartUI = () => (
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      gap: 4,
-      py: 16,
+      gap: 2,
+      py: 2,
       ".empty-cart-icon": {
         height: "96px",
         width: "96px",
@@ -118,10 +119,10 @@ const EmptyCartUI = () => (
         color: "gray400",
       },
       ".empty-cart-link": {
-        mt: 4,
+        mt: 2,
         borderRadius: "md",
         bg: "emerald500",
-        px: 6,
+        px: 2,
         py: 2,
         color: "white",
         textDecoration: "none",
@@ -135,7 +136,7 @@ const EmptyCartUI = () => (
     <ShoppingCart className="empty-cart-icon" />
     <h3 className="empty-cart-title">Your cart is empty</h3>
     <p className="empty-cart-text">
-      Looks like you haven't added anything to your cart yet.
+      Looks like you {"haven't"} added anything to your cart yet.
     </p>
     <Link to="/" className="empty-cart-link">
       Start Shopping

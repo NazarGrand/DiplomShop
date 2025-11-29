@@ -1,3 +1,5 @@
+/** @jsxImportSource theme-ui */
+import classNames from "classnames";
 import { motion } from "framer-motion";
 import { Trash, Star } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
@@ -9,87 +11,175 @@ const ProductsList = () => {
 
 	return (
 		<motion.div
-			className='bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'
+			className="products-list"
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.8 }}
+			sx={{
+				bg: "gray800",
+				boxShadow: "medium",
+				borderRadius: "lg",
+				overflow: "hidden",
+				maxWidth: "896px",
+				mx: "auto",
+				".products-table": {
+					minWidth: "100%",
+					".table-header": {
+						bg: "gray700",
+						".header-row": {
+							".header-cell": {
+								px: 6,
+								py: 3,
+								textAlign: "left",
+								fontSize: "0.75rem",
+								fontWeight: 500,
+								color: "gray300",
+								textTransform: "uppercase",
+								letterSpacing: "0.05em",
+							},
+						},
+					},
+					".table-body": {
+						bg: "gray800",
+						".table-row": {
+							borderBottom: "1px solid",
+							borderColor: "gray700",
+							"&:hover": {
+								bg: "gray700",
+							},
+							".table-cell": {
+								px: 6,
+								py: 4,
+								whiteSpace: "nowrap",
+								".product-info": {
+									display: "flex",
+									alignItems: "center",
+									".product-image": {
+										flexShrink: 0,
+										height: "40px",
+										width: "40px",
+										"& img": {
+											height: "40px",
+											width: "40px",
+											borderRadius: "full",
+											objectFit: "cover",
+										},
+									},
+									".product-name": {
+										ml: 4,
+										fontSize: "0.875rem",
+										fontWeight: 500,
+										color: "white",
+									},
+								},
+								".product-price": {
+									fontSize: "0.875rem",
+									color: "gray300",
+								},
+								".product-category": {
+									fontSize: "0.875rem",
+									color: "gray300",
+								},
+								".featured-button": {
+									p: 1,
+									borderRadius: "full",
+									cursor: "pointer",
+									border: "none",
+									transition: "background-color 0.2s ease",
+									"&.featured": {
+										bg: "#FACC15",
+										color: "gray900",
+									},
+									"&:not(.featured)": {
+										bg: "gray600",
+										color: "gray300",
+									},
+									"&:hover": {
+										bg: "#FCD34D",
+									},
+									".star-icon": {
+										height: "20px",
+										width: "20px",
+									},
+								},
+								".delete-button": {
+									fontSize: "0.875rem",
+									fontWeight: 500,
+									color: "#F87171",
+									cursor: "pointer",
+									border: "none",
+									bg: "transparent",
+									"&:hover": {
+										color: "#FCA5A5",
+									},
+									".trash-icon": {
+										height: "20px",
+										width: "20px",
+									},
+								},
+							},
+						},
+					},
+				},
+			}}
 		>
-			<table className=' min-w-full divide-y divide-gray-700'>
-				<thead className='bg-gray-700'>
-					<tr>
-						<th
-							scope='col'
-							className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'
-						>
+			<table className="products-table">
+				<thead className="table-header">
+					<tr className="header-row">
+						<th scope="col" className="header-cell">
 							Product
 						</th>
-						<th
-							scope='col'
-							className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'
-						>
+						<th scope="col" className="header-cell">
 							Price
 						</th>
-						<th
-							scope='col'
-							className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'
-						>
+						<th scope="col" className="header-cell">
 							Category
 						</th>
-
-						<th
-							scope='col'
-							className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'
-						>
+						<th scope="col" className="header-cell">
 							Featured
 						</th>
-						<th
-							scope='col'
-							className='px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider'
-						>
+						<th scope="col" className="header-cell">
 							Actions
 						</th>
 					</tr>
 				</thead>
 
-				<tbody className='bg-gray-800 divide-y divide-gray-700'>
+				<tbody className="table-body">
 					{products?.map((product) => (
-						<tr key={product._id} className='hover:bg-gray-700'>
-							<td className='px-6 py-4 whitespace-nowrap'>
-								<div className='flex items-center'>
-									<div className='flex-shrink-0 h-10 w-10'>
-										<img
-											className='h-10 w-10 rounded-full object-cover'
-											src={product.image}
-											alt={product.name}
-										/>
+						<tr key={product._id} className="table-row">
+							<td className="table-cell">
+								<div className="product-info">
+									<div className="product-image">
+										<img src={product.image} alt={product.name} />
 									</div>
-									<div className='ml-4'>
-										<div className='text-sm font-medium text-white'>{product.name}</div>
-									</div>
+									<div className="product-name">{product.name}</div>
 								</div>
 							</td>
-							<td className='px-6 py-4 whitespace-nowrap'>
-								<div className='text-sm text-gray-300'>${product.price.toFixed(2)}</div>
+							<td className="table-cell">
+								<div className="product-price">
+									${product.price.toFixed(2)}
+								</div>
 							</td>
-							<td className='px-6 py-4 whitespace-nowrap'>
-								<div className='text-sm text-gray-300'>{product.category}</div>
+							<td className="table-cell">
+								<div className="product-category">{product.category}</div>
 							</td>
-							<td className='px-6 py-4 whitespace-nowrap'>
+							<td className="table-cell">
 								<button
 									onClick={() => toggleFeaturedProduct(product._id)}
-									className={`p-1 rounded-full ${
-										product.isFeatured ? "bg-yellow-400 text-gray-900" : "bg-gray-600 text-gray-300"
-									} hover:bg-yellow-500 transition-colors duration-200`}
+									className={classNames(
+										"featured-button",
+										product.isFeatured && "featured"
+									)}
 								>
-									<Star className='h-5 w-5' />
+									<Star className="star-icon" />
 								</button>
 							</td>
-							<td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
+							<td className="table-cell">
 								<button
 									onClick={() => deleteProduct(product._id)}
-									className='text-red-400 hover:text-red-300'
+									className="delete-button"
 								>
-									<Trash className='h-5 w-5' />
+									<Trash className="trash-icon" />
 								</button>
 							</td>
 						</tr>
@@ -99,4 +189,5 @@ const ProductsList = () => {
 		</motion.div>
 	);
 };
+
 export default ProductsList;

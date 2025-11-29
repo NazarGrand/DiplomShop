@@ -13,13 +13,13 @@ const CartItem = ({ item }) => {
         borderRadius: "lg",
         border: "1px solid",
         borderColor: "gray700",
-        p: [4, 6],
+        p: [1, 3],
         boxShadow: "soft",
         bg: "gray800",
         ".cart-item-content": {
           display: "flex",
           flexDirection: ["column", "row"],
-          gap: [4, 6],
+          gap: 4,
           alignItems: "center",
           justifyContent: "space-between",
           ".cart-item-image": {
@@ -39,7 +39,7 @@ const CartItem = ({ item }) => {
             maxWidth: ["100%", "28rem"],
             display: "flex",
             flexDirection: "column",
-            gap: 4,
+            gap: 3,
             ".cart-item-name": {
               fontSize: "1rem",
               fontWeight: 500,
@@ -64,6 +64,8 @@ const CartItem = ({ item }) => {
                 color: "#FCA5A5",
                 textDecoration: "underline",
               },
+              background: "transparent",
+              border: "none",
             },
           },
           ".cart-item-controls": {
