@@ -18,6 +18,8 @@ const CartPage = () => {
       sx={{
         py: 6,
         ".cart-container": {
+          display: "flex",
+          alignSelf: "stretch",
           maxWidth: "1280px",
           mx: "auto",
           px: 2,
@@ -25,7 +27,7 @@ const CartPage = () => {
             mt: 2,
             display: "flex",
             flexDirection: ["column", "column", "row"],
-            gap: 2,
+            gap: 4,
             alignItems: ["stretch", "stretch", "flex-start"],
             ".cart-items-section": {
               mx: "auto",
@@ -39,6 +41,7 @@ const CartPage = () => {
               },
             },
             ".cart-sidebar": {
+              height: "100%",
               mx: "auto",
               mt: [2, 0],
               maxWidth: ["100%", "100%", "896px"],
@@ -79,8 +82,18 @@ const CartPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <OrderSummary />
-              <GiftCouponCard />
+              <div
+                sx={{
+                  position: "sticky",
+                  top: 6,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+              >
+                <OrderSummary />
+                <GiftCouponCard />
+              </div>
             </motion.div>
           )}
         </div>
