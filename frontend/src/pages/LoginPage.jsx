@@ -162,7 +162,7 @@ const LoginPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="login-title">Log in to your account</h2>
+        <h2 className="login-title">Увійдіть до свого облікового запису</h2>
       </motion.div>
 
       <motion.div
@@ -175,7 +175,7 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                Email address
+                Електронна пошта
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -195,7 +195,7 @@ const LoginPage = () => {
 
             <div className="form-group">
               <label htmlFor="password" className="form-label">
-                Password
+                Пароль
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -217,21 +217,21 @@ const LoginPage = () => {
               {loading ? (
                 <>
                   <Loader className="button-icon" aria-hidden="true" />
-                  Loading...
+                  Завантаження...
                 </>
               ) : (
                 <>
                   <LogIn className="button-icon" aria-hidden="true" />
-                  Login
+                  Увійти
                 </>
               )}
             </button>
           </form>
 
           <p className="login-footer">
-            Not a member?{" "}
+            Немає облікового запису?{" "}
             <Link to="/signup" className="signup-link">
-              Sign up now <ArrowRight className="link-icon" />
+              Зареєструватися зараз <ArrowRight className="link-icon" />
             </Link>
           </p>
         </div>

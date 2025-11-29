@@ -96,20 +96,20 @@ const PurchaseCancelPage = () => {
           <div className="cancel-icon">
             <XCircle />
           </div>
-          <h1 className="cancel-title">Purchase Cancelled</h1>
+          <h1 className="cancel-title">Покупку скасовано</h1>
           <p className="cancel-text">
-            Your order has been cancelled. No charges have been made.
+            Ваше замовлення скасовано. З вас нічого не стягнуто.
           </p>
           <div className="cancel-info">
             <p className="info-text">
-              If you encountered any issues during the checkout process, please
-              don&apos;t hesitate to contact our support team.
+              Якщо у вас виникли проблеми під час процесу оформлення замовлення,
+              будь ласка, не соромтеся звернутися до нашої служби підтримки.
             </p>
           </div>
           <div className="cancel-actions">
             <Link to="/" className="return-link">
               <ArrowLeft className="link-icon" size={18} />
-              Return to Shop
+              Повернутися до магазину
             </Link>
           </div>
         </div>

@@ -233,12 +233,12 @@ const CreateProductForm = () => {
         },
       }}
     >
-      <h2 className="form-title">Create New Product</h2>
+      <h2 className="form-title">Створити новий товар</h2>
 
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
           <label htmlFor="name" className="form-label">
-            Product Name
+            Назва товару
           </label>
           <input
             type="text"
@@ -255,7 +255,7 @@ const CreateProductForm = () => {
 
         <div className="form-group">
           <label htmlFor="description" className="form-label">
-            Description
+            Опис
           </label>
           <textarea
             id="description"
@@ -272,7 +272,7 @@ const CreateProductForm = () => {
 
         <div className="form-group">
           <label htmlFor="price" className="form-label">
-            Price
+            Ціна
           </label>
           <input
             type="number"
@@ -290,7 +290,7 @@ const CreateProductForm = () => {
 
         <div className="form-group">
           <label htmlFor="category" className="form-label">
-            Category
+            Категорія
           </label>
           <select
             id="category"
@@ -302,7 +302,7 @@ const CreateProductForm = () => {
             className="form-select"
             required
           >
-            <option value="">Select a category</option>
+            <option value="">Виберіть категорію</option>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -322,10 +322,10 @@ const CreateProductForm = () => {
             />
             <label htmlFor="image" className="file-label">
               <Upload className="upload-icon" />
-              Upload Image
+              Завантажити зображення
             </label>
             {newProduct.image && (
-              <span className="upload-status">Image uploaded</span>
+              <span className="upload-status">Зображення завантажено</span>
             )}
           </div>
         </div>
@@ -334,12 +334,12 @@ const CreateProductForm = () => {
           {loading ? (
             <>
               <Loader className="button-icon" aria-hidden="true" />
-              Loading...
+              Завантаження...
             </>
           ) : (
             <>
               <PlusCircle className="button-icon" />
-              Create Product
+              Створити товар
             </>
           )}
         </button>

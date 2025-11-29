@@ -66,7 +66,7 @@ const CategoryItem = ({ category }) => {
         />
         <div className="category-content">
           <h3 className="category-title">{category.name}</h3>
-          <p className="category-description">Explore {category.name}</p>
+          <p className="category-description">Переглянути {category.name}</p>
         </div>
       </Link>
     </Box>

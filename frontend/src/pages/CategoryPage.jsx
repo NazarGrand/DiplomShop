@@ -71,7 +71,7 @@ const CategoryPage = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           {products?.length === 0 && (
-            <h2 className="empty-message">No products found</h2>
+            <h2 className="empty-message">Товари не знайдено</h2>
           )}
 
           {products?.map((product) => (

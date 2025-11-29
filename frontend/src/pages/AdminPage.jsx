@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { BarChart, PlusCircle, ShoppingBasket } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Box } from "theme-ui";
 
 import AnalyticsTab from "../components/AnalyticsTab";
 import CreateProductForm from "../components/CreateProductForm";
@@ -10,9 +11,9 @@ import ProductsList from "../components/ProductsList";
 import { useProductStore } from "../stores/useProductStore";
 
 const tabs = [
-  { id: "create", label: "Create Product", icon: PlusCircle },
-  { id: "products", label: "Products", icon: ShoppingBasket },
-  { id: "analytics", label: "Analytics", icon: BarChart },
+  { id: "create", label: "Створити товар", icon: PlusCircle },
+  { id: "products", label: "Товари", icon: ShoppingBasket },
+  { id: "analytics", label: "Аналітика", icon: BarChart },
 ];
 
 const AdminPage = () => {
@@ -24,7 +25,7 @@ const AdminPage = () => {
   }, [fetchAllProducts]);
 
   return (
-    <div
+    <Box
       className="admin-page"
       sx={{
         minHeight: "100vh",
@@ -87,7 +88,7 @@ const AdminPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Admin Dashboard
+          Панель адміністратора
         </motion.h1>
 
         <div className="admin-tabs">
@@ -109,7 +110,7 @@ const AdminPage = () => {
         {activeTab === "products" && <ProductsList />}
         {activeTab === "analytics" && <AnalyticsTab />}
       </div>
-    </div>
+    </Box>
   );
 };
 

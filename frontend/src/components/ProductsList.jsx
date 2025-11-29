@@ -127,19 +127,19 @@ const ProductsList = () => {
         <thead className="table-header">
           <tr className="header-row">
             <th scope="col" className="header-cell">
-              Product
+              Товар
             </th>
             <th scope="col" className="header-cell">
-              Price
+              Ціна
             </th>
             <th scope="col" className="header-cell">
-              Category
+              Категорія
             </th>
             <th scope="col" className="header-cell">
-              Featured
+              Рекомендований
             </th>
             <th scope="col" className="header-cell">
-              Actions
+              Дії
             </th>
           </tr>
         </thead>

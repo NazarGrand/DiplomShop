@@ -165,7 +165,7 @@ const SignUpPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="signup-title">Create your account</h2>
+        <h2 className="signup-title">Створіть свій обліковий запис</h2>
       </motion.div>
 
       <motion.div
@@ -178,7 +178,7 @@ const SignUpPage = () => {
           <form onSubmit={handleSubmit} className="signup-form">
             <div className="form-group">
               <label htmlFor="name" className="form-label">
-                Full name
+                Повне ім&apos;я
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -200,7 +200,7 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                Email address
+                Електронна пошта
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -222,7 +222,7 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="password" className="form-label">
-                Password
+                Пароль
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -244,7 +244,7 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
+                Підтвердити пароль
               </label>
               <div className="input-wrapper">
                 <div className="input-icon">
@@ -271,21 +271,21 @@ const SignUpPage = () => {
               {loading ? (
                 <>
                   <Loader className="button-icon" aria-hidden="true" />
-                  Loading...
+                  Завантаження...
                 </>
               ) : (
                 <>
                   <UserPlus className="button-icon" aria-hidden="true" />
-                  Sign up
+                  Зареєструватися
                 </>
               )}
             </button>
           </form>
 
           <p className="signup-footer">
-            Already have an account?{" "}
+            Вже маєте обліковий запис?{" "}
             <Link to="/login" className="login-link">
-              Login here <ArrowRight className="link-icon" />
+              Увійти тут <ArrowRight className="link-icon" />
             </Link>
           </p>
         </div>

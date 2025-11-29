@@ -83,7 +83,7 @@ const CartPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div
+              <Box
                 sx={{
                   position: "sticky",
                   top: "80px",
@@ -94,7 +94,7 @@ const CartPage = () => {
               >
                 <OrderSummary />
                 <GiftCouponCard />
-              </div>
+              </Box>
             </motion.div>
           )}
         </div>
@@ -148,12 +148,10 @@ const EmptyCartUI = () => (
     }}
   >
     <ShoppingCart className="empty-cart-icon" />
-    <h3 className="empty-cart-title">Your cart is empty</h3>
-    <p className="empty-cart-text">
-      Looks like you {"haven't"} added anything to your cart yet.
-    </p>
+    <h3 className="empty-cart-title">Ваш кошик порожній</h3>
+    <p className="empty-cart-text">Схоже, ви ще нічого не додали до кошика.</p>
     <Link to="/" className="empty-cart-link">
-      Start Shopping
+      Почати покупки
     </Link>
   </motion.div>
 );

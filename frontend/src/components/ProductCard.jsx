@@ -1,6 +1,7 @@
 /** @jsxImportSource theme-ui */
 import toast from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
+import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
@@ -9,7 +10,9 @@ const ProductCard = ({ product }) => {
   const { addToCart } = useCartStore();
   const handleAddToCart = () => {
     if (!user) {
-      toast.error("Please login to add products to cart", { id: "login" });
+      toast.error("Будь ласка, увійдіть, щоб додати товари до кошика", {
+        id: "login",
+      });
       return;
     } else {
       addToCart(product);
@@ -17,7 +20,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div
+    <Box
       className="product-card"
       sx={{
         display: "flex",
@@ -115,11 +118,10 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
         <button className="add-to-cart-btn" onClick={handleAddToCart}>
-          <ShoppingCart size={22} className="btn-icon" />
-          Add to cart
+          <ShoppingCart size={22} className="btn-icon" />В корзину
         </button>
       </div>
-    </div>
+    </Box>
   );
 };
 

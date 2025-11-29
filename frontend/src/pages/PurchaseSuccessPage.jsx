@@ -2,6 +2,7 @@
 import { ArrowRight, CheckCircle, HandHeart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Box } from "theme-ui";
 import { useCartStore } from "../stores/useCartStore";
 import axios from "../lib/axios";
 import Confetti from "react-confetti";
@@ -36,12 +37,12 @@ const PurchaseSuccessPage = () => {
     }
   }, [clearCart]);
 
-  if (isProcessing) return "Processing...";
+  if (isProcessing) return "Обробка...";
 
-  if (error) return `Error: ${error}`;
+  if (error) return `Помилка: ${error}`;
 
   return (
-    <div
+    <Box
       className="purchase-success-page"
       sx={{
         height: "100vh",
@@ -178,38 +179,38 @@ const PurchaseSuccessPage = () => {
           <div className="success-icon">
             <CheckCircle />
           </div>
-          <h1 className="success-title">Purchase Successful!</h1>
+          <h1 className="success-title">Покупка успішна!</h1>
 
           <p className="success-text">
-            Thank you for your order. We're processing it now.
+            Дякуємо за ваше замовлення. Ми обробляємо його зараз.
           </p>
           <p className="success-subtext">
-            Check your email for order details and updates.
+            Перевірте свою електронну пошту для деталей замовлення та оновлень.
           </p>
           <div className="order-info">
             <div className="order-row">
-              <span className="order-label">Order number</span>
+              <span className="order-label">Номер замовлення</span>
               <span className="order-value">#12345</span>
             </div>
             <div className="order-row">
-              <span className="order-label">Estimated delivery</span>
-              <span className="order-value">3-5 business days</span>
+              <span className="order-label">Орієнтовна доставка</span>
+              <span className="order-value">3-5 робочих днів</span>
             </div>
           </div>
 
           <div className="success-actions">
             <button className="action-button">
               <HandHeart className="button-icon" size={18} />
-              Thanks for trusting us!
+              Дякуємо за довіру!
             </button>
             <Link to="/" className="continue-link">
-              Continue Shopping
+              Продовжити покупки
               <ArrowRight className="link-icon" size={18} />
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 

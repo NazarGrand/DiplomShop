@@ -1,17 +1,18 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
-import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
+import { ShoppingCart, UserPlus, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
 const Navbar = () => {
   const { user, logout } = useUserStore();
-  const isAdmin = user?.role === "admin";
   const { cart } = useCartStore();
 
   return (
-    <header
+    <Box
+      as="header"
       className="navbar"
       sx={{
         position: "fixed",
@@ -148,17 +149,17 @@ const Navbar = () => {
       <div className="navbar-container">
         <div className="navbar-content">
           <Link to="/" className="navbar-logo">
-            E-Commerce
+            ElectroLab
           </Link>
 
           <nav className="navbar-nav">
             <Link to="/" className="nav-link">
-              Home
+              Головна
             </Link>
             {user && (
               <Link to="/cart" className="cart-link">
                 <ShoppingCart className="cart-icon" size={20} />
-                <span className="cart-text">Cart</span>
+                <span className="cart-text">Кошик</span>
                 {cart.length > 0 && (
                   <span className="cart-badge">{cart.length}</span>
                 )}
@@ -170,7 +171,7 @@ const Navbar = () => {
                 onClick={logout}
               >
                 <LogOut size={18} />
-                <span className="button-text">Log Out</span>
+                <span className="button-text">Вийти</span>
               </button>
             ) : (
               <>
@@ -179,21 +180,21 @@ const Navbar = () => {
                   className={classNames("nav-button", "primary", "signup")}
                 >
                   <UserPlus className="button-icon" size={18} />
-                  Sign Up
+                  Реєстрація
                 </Link>
                 <Link
                   to="/login"
                   className={classNames("nav-button", "secondary")}
                 >
                   <LogIn className="button-icon" size={18} />
-                  Login
+                  Увійти
                 </Link>
               </>
             )}
           </nav>
         </div>
       </div>
-    </header>
+    </Box>
   );
 };
 

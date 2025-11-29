@@ -1,5 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { useEffect, useState } from "react";
+import { Box } from "theme-ui";
 import ProductCard from "./ProductCard";
 import axios from "../lib/axios";
 import toast from "react-hot-toast";
@@ -17,7 +18,7 @@ const PeopleAlsoBought = () => {
       } catch (error) {
         toast.error(
           error.response?.data?.message ||
-            "An error occurred while fetching recommendations"
+            "Сталася помилка при отриманні рекомендацій"
         );
       } finally {
         setIsLoading(false);
@@ -30,7 +31,7 @@ const PeopleAlsoBought = () => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div
+    <Box
       className="people-also-bought"
       sx={{
         mt: 3,
@@ -47,13 +48,13 @@ const PeopleAlsoBought = () => {
         },
       }}
     >
-      <h3 className="recommendations-title">People also bought</h3>
+      <h3 className="recommendations-title">Вам можуть сподобатися</h3>
       <div className="recommendations-grid">
         {recommendations.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>
-    </div>
+    </Box>
   );
 };
 

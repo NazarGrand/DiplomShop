@@ -1,5 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { useEffect } from "react";
+import { Box } from "theme-ui";
 import CategoryItem from "../components/CategoryItem";
 import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
@@ -22,7 +23,7 @@ const HomePage = () => {
   }, [fetchFeaturedProducts]);
 
   return (
-    <div
+    <Box
       className="home-page"
       sx={{
         position: "relative",
@@ -59,10 +60,8 @@ const HomePage = () => {
       }}
     >
       <div className="home-container">
-        <h1 className="home-title">Explore Our Categories</h1>
-        <p className="home-subtitle">
-          Discover the latest trends in eco-friendly fashion
-        </p>
+        <h1 className="home-title">Основні категорії</h1>
+        <p className="home-subtitle">Широкий вибір техніки в одному місці</p>
 
         <div className="categories-grid">
           {categories.map((category) => (
@@ -74,7 +73,7 @@ const HomePage = () => {
           <FeaturedProducts featuredProducts={products} />
         )}
       </div>
-    </div>
+    </Box>
   );
 };
 

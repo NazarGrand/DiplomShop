@@ -149,13 +149,13 @@ const GiftCouponCard = () => {
       <div className="coupon-form">
         <div>
           <label htmlFor="voucher" className="coupon-label">
-            Do you have a voucher or gift card?
+            Введіть промокод
           </label>
           <input
             type="text"
             id="voucher"
             className="coupon-input"
-            placeholder="Enter code here"
+            placeholder="Введіть промокод тут"
             value={userInputCode}
             onChange={(e) => setUserInputCode(e.target.value)}
             required
@@ -169,14 +169,14 @@ const GiftCouponCard = () => {
           whileTap={{ scale: 0.95 }}
           onClick={handleApplyCoupon}
         >
-          Apply Code
+          Застосувати промокод
         </motion.button>
       </div>
       {isCouponApplied && coupon && (
         <div className="applied-coupon">
-          <h3 className="applied-title">Applied Coupon</h3>
+          <h3 className="applied-title">Застосований купон</h3>
           <p className="applied-text">
-            {coupon.code} - {coupon.discountPercentage}% off
+            {coupon.code} - знижка {coupon.discountPercentage}%
           </p>
           <motion.button
             type="button"
@@ -185,16 +185,16 @@ const GiftCouponCard = () => {
             whileTap={{ scale: 0.95 }}
             onClick={handleRemoveCoupon}
           >
-            Remove Coupon
+            Видалити купон
           </motion.button>
         </div>
       )}
 
       {coupon && (
         <div className="available-coupon">
-          <h3 className="available-title">Your Available Coupon:</h3>
+          <h3 className="available-title">Ваш доступний купон:</h3>
           <p className="available-text">
-            {coupon.code} - {coupon.discountPercentage}% off
+            {coupon.code} - знижка {coupon.discountPercentage}%
           </p>
         </div>
       )}

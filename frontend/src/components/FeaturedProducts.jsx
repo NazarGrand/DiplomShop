@@ -2,6 +2,7 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { Box } from "theme-ui";
 import { useCartStore } from "../stores/useCartStore";
 
 const FeaturedProducts = ({ featuredProducts }) => {
@@ -35,7 +36,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
   const isEndDisabled = currentIndex >= featuredProducts.length - itemsPerPage;
 
   return (
-    <div
+    <Box
       className="featured-products"
       sx={{
         py: 12,
@@ -167,7 +168,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
       }}
     >
       <div className="featured-container">
-        <h2 className="featured-title">Featured</h2>
+        <h2 className="featured-title">Рекомендовані</h2>
         <div className="featured-carousel">
           <div className="carousel-wrapper">
             <div
@@ -197,8 +198,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                         className="add-to-cart-btn"
                         onClick={() => addToCart(product)}
                       >
-                        <ShoppingCart className="btn-icon" />
-                        Add to Cart
+                        <ShoppingCart className="btn-icon" />В корзину
                       </button>
                     </div>
                   </div>
@@ -230,7 +230,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
           </button>
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 

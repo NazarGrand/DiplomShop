@@ -147,31 +147,31 @@ const OrderSummary = () => {
         },
       }}
     >
-      <p className="order-title">Order summary</p>
+      <p className="order-title">Деталі замовлення</p>
 
       <div className="order-details">
         <div className="order-items">
           <dl className="order-row">
-            <dt className="order-label">Original price</dt>
+            <dt className="order-label">Початкова ціна</dt>
             <dd className="order-value">${formattedSubtotal}</dd>
           </dl>
 
           {savings > 0 && (
             <dl className="order-row savings">
-              <dt className="order-label">Savings</dt>
+              <dt className="order-label">Економія</dt>
               <dd className="order-value">-${formattedSavings}</dd>
             </dl>
           )}
 
           {coupon && isCouponApplied && (
             <dl className="order-row">
-              <dt className="order-label">Coupon ({coupon.code})</dt>
+              <dt className="order-label">Купон ({coupon.code})</dt>
               <dd className="order-value">-{coupon.discountPercentage}%</dd>
             </dl>
           )}
 
           <dl className="order-row total">
-            <dt className="order-label">Total</dt>
+            <dt className="order-label">До сплати</dt>
             <dd className="order-value">${formattedTotal}</dd>
           </dl>
         </div>
@@ -183,13 +183,13 @@ const OrderSummary = () => {
         whileTap={{ scale: 0.95 }}
         onClick={handlePayment}
       >
-        Proceed to Checkout
+        Оплатити зараз
       </motion.button>
 
       <div className="continue-shopping">
-        <span className="continue-text">or</span>
+        <span className="continue-text">або</span>
         <Link to="/" className="continue-link">
-          Continue Shopping
+          Продовжити покупки
           <MoveRight size={16} />
         </Link>
       </div>
