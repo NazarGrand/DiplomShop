@@ -2,10 +2,11 @@
 import { XCircle, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Box } from "theme-ui";
 
 const PurchaseCancelPage = () => {
   return (
-    <div
+    <Box
       className="purchase-cancel-page"
       sx={{
         minHeight: "100vh",
@@ -23,7 +24,7 @@ const PurchaseCancelPage = () => {
           position: "relative",
           zIndex: 10,
           ".cancel-content": {
-            p: [6, 8],
+            paddingTop: 6,
             ".cancel-icon": {
               display: "flex",
               justifyContent: "center",
@@ -44,13 +45,12 @@ const PurchaseCancelPage = () => {
             ".cancel-text": {
               color: "gray300",
               textAlign: "center",
-              mb: 6,
             },
             ".cancel-info": {
               bg: "gray700",
               borderRadius: "lg",
               p: 4,
-              mb: 6,
+              mb: 3,
               ".info-text": {
                 fontSize: "0.875rem",
                 color: "gray400",
@@ -103,7 +103,7 @@ const PurchaseCancelPage = () => {
           <div className="cancel-info">
             <p className="info-text">
               If you encountered any issues during the checkout process, please
-              don't hesitate to contact our support team.
+              don&apos;t hesitate to contact our support team.
             </p>
           </div>
           <div className="cancel-actions">
@@ -114,7 +114,7 @@ const PurchaseCancelPage = () => {
           </div>
         </div>
       </motion.div>
-    </div>
+    </Box>
   );
 };
 
