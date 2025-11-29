@@ -32,9 +32,14 @@ export const theme: Theme = {
     gray900: "#111827",
   },
   fonts: {
-    body: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    body: "'Ubuntu', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     heading:
-      "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "'Ubuntu', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  },
+  fontWeights: {
+    body: 400,
+    heading: 800,
+    bold: 700,
   },
   styles: {
     root: {

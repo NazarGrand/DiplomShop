@@ -74,7 +74,7 @@ const PurchaseSuccessPage = () => {
             },
             ".success-title": {
               fontSize: ["1.5rem", "1.875rem"],
-              fontWeight: 700,
+              fontWeight: 900,
               textAlign: "center",
               color: "emerald400",
               mb: 2,

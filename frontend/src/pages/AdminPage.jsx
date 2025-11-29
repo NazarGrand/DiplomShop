@@ -41,7 +41,7 @@ const AdminPage = () => {
           ".admin-title": {
             marginTop: "80px",
             fontSize: "2.25rem",
-            fontWeight: 700,
+            fontWeight: 900,
             mb: 4,
             color: "emerald400",
             textAlign: "center",

@@ -70,7 +70,7 @@ const CreateProductForm = () => {
         mx: "auto",
         ".form-title": {
           fontSize: "1.5rem",
-          fontWeight: 600,
+          fontWeight: 800,
           mb: 4,
           color: "rgba(16, 185, 129, 0.8)",
         },

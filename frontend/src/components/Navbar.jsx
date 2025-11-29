@@ -38,7 +38,7 @@ const Navbar = () => {
             alignItems: "center",
             ".navbar-logo": {
               fontSize: "1.5rem",
-              fontWeight: 700,
+              fontWeight: 900,
               color: "emerald400",
               display: "flex",
               alignItems: "center",

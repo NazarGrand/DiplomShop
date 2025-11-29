@@ -53,7 +53,7 @@ const OrderSummary = () => {
         boxShadow: "soft",
         ".order-title": {
           fontSize: "1.25rem",
-          fontWeight: 600,
+          fontWeight: 800,
           color: "emerald400",
         },
         ".order-details": {

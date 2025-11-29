@@ -46,7 +46,7 @@ const CategoryItem = ({ category }) => {
             ".category-title": {
               color: "white",
               fontSize: "1.5rem",
-              fontWeight: 700,
+              fontWeight: 900,
             },
             ".category-description": {
               color: "rgba(229, 231, 235, 1)",

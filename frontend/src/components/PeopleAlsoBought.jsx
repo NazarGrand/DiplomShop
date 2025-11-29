@@ -37,7 +37,7 @@ const PeopleAlsoBought = () => {
         mt: 3,
         ".recommendations-title": {
           fontSize: "1.5rem",
-          fontWeight: 600,
+          fontWeight: 800,
           color: "emerald400",
         },
         ".recommendations-grid": {

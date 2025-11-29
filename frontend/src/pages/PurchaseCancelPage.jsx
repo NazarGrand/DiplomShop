@@ -37,7 +37,7 @@ const PurchaseCancelPage = () => {
             },
             ".cancel-title": {
               fontSize: ["1.5rem", "1.875rem"],
-              fontWeight: 700,
+              fontWeight: 900,
               textAlign: "center",
               color: "#EF4444",
               mb: 2,

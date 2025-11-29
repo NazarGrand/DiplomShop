@@ -47,7 +47,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
           ".featured-title": {
             textAlign: "center",
             fontSize: ["3rem", "3.75rem"],
-            fontWeight: 700,
+            fontWeight: 900,
             color: "emerald400",
             mb: 4,
           },
@@ -91,7 +91,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                       p: 4,
                       ".product-name": {
                         fontSize: "1.125rem",
-                        fontWeight: 600,
+                        fontWeight: 700,
                         mb: 2,
                         color: "white",
                         whiteSpace: "nowrap",

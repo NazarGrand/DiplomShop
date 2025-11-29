@@ -30,7 +30,7 @@ const CategoryPage = () => {
           ".category-title": {
             textAlign: "center",
             fontSize: ["2.25rem", "3rem"],
-            fontWeight: 700,
+            fontWeight: 900,
             color: "emerald400",
           },
           ".products-grid": {

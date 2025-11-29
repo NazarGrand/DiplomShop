@@ -41,7 +41,7 @@ const HomePage = () => {
           ".home-title": {
             textAlign: "center",
             fontSize: ["3rem", "3.75rem"],
-            fontWeight: 700,
+            fontWeight: 900,
             color: "emerald400",
             mb: 4,
           },

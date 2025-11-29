@@ -35,7 +35,7 @@ const LoginPage = () => {
             mt: 6,
             textAlign: "center",
             fontSize: "1.875rem",
-            fontWeight: 800,
+            fontWeight: 900,
             color: "emerald400",
           },
         },

@@ -55,9 +55,12 @@ const ProductCard = ({ product }) => {
           pb: 3,
           ".product-name": {
             fontSize: "1.25rem",
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: "-0.025em",
             color: "white",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           },
           ".product-price-wrapper": {
             mt: 1,

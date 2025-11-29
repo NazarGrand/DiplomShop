@@ -125,7 +125,7 @@ const EmptyCartUI = () => (
       },
       ".empty-cart-title": {
         fontSize: "1.5rem",
-        fontWeight: 600,
+        fontWeight: 800,
         color: "white",
       },
       ".empty-cart-text": {
