@@ -146,8 +146,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
                 right: "-16px",
               },
               "&.disabled": {
-                bg: "gray400",
-                cursor: "not-allowed",
+                display: "none",
               },
               "&:not(.disabled)": {
                 bg: "emerald600",

@@ -19,6 +19,7 @@ const CartPage = () => {
         py: 6,
         ".cart-container": {
           display: "flex",
+          justifyContent: "center",
           alignSelf: "stretch",
           maxWidth: "1280px",
           mx: "auto",

@@ -50,6 +50,7 @@ const PurchaseSuccessPage = () => {
         justifyContent: "center",
         px: 4,
         ".success-card": {
+          marginTop: 6,
           maxWidth: "28rem",
           width: "100%",
           bg: "gray800",
@@ -59,8 +60,8 @@ const PurchaseSuccessPage = () => {
           position: "relative",
           zIndex: 10,
           ".success-content": {
-            p: [6, 8],
             ".success-icon": {
+              paddingTop: 2,
               display: "flex",
               justifyContent: "center",
               "& svg": {
@@ -86,13 +87,13 @@ const PurchaseSuccessPage = () => {
               color: "emerald400",
               textAlign: "center",
               fontSize: "0.875rem",
-              mb: 6,
+              mb: 4,
             },
             ".order-info": {
               bg: "gray700",
               borderRadius: "lg",
               p: 4,
-              mb: 6,
+              mb: 4,
               ".order-row": {
                 display: "flex",
                 alignItems: "center",
@@ -115,7 +116,7 @@ const PurchaseSuccessPage = () => {
             ".success-actions": {
               display: "flex",
               flexDirection: "column",
-              gap: 4,
+              gap: 2,
               ".action-button": {
                 width: "100%",
                 bg: "emerald600",
