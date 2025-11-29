@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
+import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 
 const LoginPage = () => {
@@ -18,14 +19,14 @@ const LoginPage = () => {
   };
 
   return (
-    <div
+    <Box
       className="login-page"
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         py: 12,
-        px: [0, 6, 8],
+        // px: [0, 6, 8],
         ".login-header": {
           mx: "auto",
           width: "100%",
@@ -42,7 +43,7 @@ const LoginPage = () => {
           mt: 1,
           mx: "auto",
           width: "100%",
-          maxWidth: "50rem",
+          maxWidth: ["80%", "60%", "40%"],
           ".login-form-card": {
             bg: "gray800",
             py: 5,
@@ -61,7 +62,7 @@ const LoginPage = () => {
                   color: "gray300",
                 },
                 ".input-wrapper": {
-                  mt: 1,
+                  mt: 2,
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
@@ -235,7 +236,7 @@ const LoginPage = () => {
           </p>
         </div>
       </motion.div>
-    </div>
+    </Box>
   );
 };
 

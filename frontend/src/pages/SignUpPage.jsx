@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { UserPlus, Mail, Lock, User, ArrowRight, Loader } from "lucide-react";
 import { motion } from "framer-motion";
+import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 
 const SignUpPage = () => {
@@ -21,7 +22,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div
+    <Box
       className="signup-page"
       sx={{
         display: "flex",
@@ -64,7 +65,7 @@ const SignUpPage = () => {
                   color: "gray300",
                 },
                 ".input-wrapper": {
-                  mt: 1,
+                  mt: 2,
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
@@ -289,7 +290,7 @@ const SignUpPage = () => {
           </p>
         </div>
       </motion.div>
-    </div>
+    </Box>
   );
 };
 
