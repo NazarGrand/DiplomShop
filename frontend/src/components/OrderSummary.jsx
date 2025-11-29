@@ -63,7 +63,6 @@ const OrderSummary = () => {
           ".order-items": {
             display: "flex",
             flexDirection: "column",
-            gap: 2,
             ".order-row": {
               display: "flex",
               alignItems: "center",
@@ -83,6 +82,7 @@ const OrderSummary = () => {
                 color: "emerald400",
               },
               "&.total": {
+                margin: 0,
                 borderTop: "1px solid",
                 borderColor: "gray600",
                 pt: 2,

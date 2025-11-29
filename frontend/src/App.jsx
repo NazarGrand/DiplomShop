@@ -39,7 +39,6 @@ function App() {
         bg: "gray900",
         color: "white",
         position: "relative",
-        overflow: "hidden",
         ".app-background": {
           position: "absolute",
           inset: 0,

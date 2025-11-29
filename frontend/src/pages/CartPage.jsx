@@ -85,7 +85,7 @@ const CartPage = () => {
               <div
                 sx={{
                   position: "sticky",
-                  top: 6,
+                  top: "80px",
                   display: "flex",
                   flexDirection: "column",
                   gap: 2,

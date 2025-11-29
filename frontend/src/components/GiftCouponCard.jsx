@@ -35,7 +35,6 @@ const GiftCouponCard = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: 4,
         borderRadius: "lg",
         border: "1px solid",
         borderColor: "gray700",
@@ -134,7 +133,6 @@ const GiftCouponCard = () => {
           },
         },
         ".available-coupon": {
-          mt: 4,
           ".available-title": {
             fontSize: "1.125rem",
             fontWeight: 500,
