@@ -93,6 +93,9 @@ const FeaturedProducts = ({ featuredProducts }) => {
                         fontWeight: 600,
                         mb: 2,
                         color: "white",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       },
                       ".product-price": {
                         color: "rgba(16, 185, 129, 0.8)",

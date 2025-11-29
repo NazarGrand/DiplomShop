@@ -164,15 +164,6 @@ const Navbar = () => {
                 )}
               </Link>
             )}
-            {isAdmin && (
-              <Link
-                to="/secret-dashboard"
-                className={classNames("nav-button", "primary")}
-              >
-                <Lock className="button-icon" size={18} />
-                <span className="button-text">Dashboard</span>
-              </Link>
-            )}
             {user ? (
               <button
                 className={classNames("nav-button", "secondary")}

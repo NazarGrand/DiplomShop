@@ -36,6 +36,7 @@ const HomePage = () => {
           mx: "auto",
           px: ["1rem", "1.5rem", "2rem"],
           py: 16,
+          paddingTop: "80px",
           ".home-title": {
             textAlign: "center",
             fontSize: ["3rem", "3.75rem"],
@@ -47,7 +48,7 @@ const HomePage = () => {
             textAlign: "center",
             fontSize: "1.25rem",
             color: "gray300",
-            mb: 12,
+            mb: 4,
           },
           ".categories-grid": {
             display: "grid",

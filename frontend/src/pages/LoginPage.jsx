@@ -162,7 +162,7 @@ const LoginPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="login-title">Create your account</h2>
+        <h2 className="login-title">Log in to your account</h2>
       </motion.div>
 
       <motion.div
