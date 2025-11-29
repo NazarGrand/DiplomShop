@@ -96,8 +96,8 @@ const SignUpPage = () => {
                     },
                     "&:focus": {
                       outline: "none",
-                      borderColor: "emerald500",
-                      boxShadow: "0 0 0 1px rgba(16, 185, 129, 1)",
+                      borderColor: "#6f82a0",
+                      boxShadow: "0 0 0 1px #6f82a0",
                     },
                   },
                 },
@@ -116,15 +116,15 @@ const SignUpPage = () => {
                 fontSize: "0.875rem",
                 fontWeight: 500,
                 color: "white",
-                bg: "emerald600",
+                bg: "#3f5f9a",
                 cursor: "pointer",
                 transition: "all 0.15s ease-in-out",
                 "&:hover": {
-                  bg: "emerald700",
+                  bg: "#324a7c",
                 },
                 "&:focus": {
                   outline: "none",
-                  boxShadow: "0 0 0 2px rgba(16, 185, 129, 0.5)",
+                  boxShadow: "0 0 0 2px #3f5f9a",
                 },
                 "&:disabled": {
                   opacity: 0.5,
@@ -146,7 +146,7 @@ const SignUpPage = () => {
                 color: "emerald400",
                 textDecoration: "none",
                 "&:hover": {
-                  color: "rgba(16, 185, 129, 0.8)",
+                  color: "#1a73e8",
                 },
                 ".link-icon": {
                   display: "inline",

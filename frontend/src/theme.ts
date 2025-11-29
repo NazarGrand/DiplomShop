@@ -19,7 +19,7 @@ export const theme: Theme = {
     warning: "#F59E0B",
     error: "#EF4444",
     info: "#3B82F6",
-    emerald400: "#34D399",
+    emerald400: "#dde4ea",
     emerald500: "#10B981",
     emerald600: "#059669",
     emerald700: "#047857",

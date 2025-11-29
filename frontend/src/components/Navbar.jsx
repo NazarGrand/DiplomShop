@@ -25,7 +25,7 @@ const Navbar = () => {
         zIndex: 40,
         transition: "all 0.3s ease",
         borderBottom: "1px solid",
-        borderColor: "emerald800",
+        borderColor: "#4a6fae",
         ".navbar-container": {
           maxWidth: "1280px",
           mx: "auto",
@@ -83,7 +83,7 @@ const Navbar = () => {
                   position: "absolute",
                   top: "-8px",
                   left: "-8px",
-                  bg: "emerald500",
+                  bg: "#1a73e8",
                   color: "white",
                   borderRadius: "full",
                   px: 2,
@@ -91,7 +91,7 @@ const Navbar = () => {
                   fontSize: "0.75rem",
                   transition: "background-color 0.3s ease-in-out",
                   "&:hover": {
-                    bg: "emerald400",
+                    bg: "#4dbeff",
                   },
                 },
               },
@@ -135,9 +135,9 @@ const Navbar = () => {
                   },
                 },
                 "&.signup": {
-                  bg: "emerald600",
+                  bg: "#324a7c",
                   "&:hover": {
-                    bg: "emerald700",
+                    bg: "#25365c",
                   },
                 },
               },

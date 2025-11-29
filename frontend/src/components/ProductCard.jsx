@@ -71,7 +71,7 @@ const ProductCard = ({ product }) => {
             ".product-price": {
               fontSize: "1.875rem",
               fontWeight: 700,
-              color: "emerald400",
+              color: "white",
             },
           },
           ".add-to-cart-btn": {
@@ -80,7 +80,7 @@ const ProductCard = ({ product }) => {
             justifyContent: "center",
             width: "100%",
             borderRadius: "lg",
-            bg: "emerald600",
+            bg: "#3f5f9a",
             px: 4,
             py: 3,
             textAlign: "center",
@@ -91,7 +91,7 @@ const ProductCard = ({ product }) => {
             border: "none",
             transition: "all 0.2s ease",
             "&:hover": {
-              bg: "emerald700",
+              bg: "#324a7c",
             },
             "&:focus": {
               outline: "none",

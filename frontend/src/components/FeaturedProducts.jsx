@@ -99,15 +99,15 @@ const FeaturedProducts = ({ featuredProducts }) => {
                         textOverflow: "ellipsis",
                       },
                       ".product-price": {
-                        color: "rgba(16, 185, 129, 0.8)",
+                        color: "white",
                         fontWeight: 500,
                         mb: 4,
                       },
                       ".add-to-cart-btn": {
                         width: "100%",
-                        bg: "emerald600",
+                        bg: "#3f5f9a",
                         "&:hover": {
-                          bg: "emerald500",
+                          bg: "#324a7c",
                         },
                         color: "white",
                         fontWeight: 600,
@@ -153,9 +153,9 @@ const FeaturedProducts = ({ featuredProducts }) => {
                 display: "none",
               },
               "&:not(.disabled)": {
-                bg: "emerald600",
+                bg: "lightskyblue",
                 "&:hover": {
-                  bg: "emerald500",
+                  bg: "#4dbeff",
                 },
               },
               ".button-icon": {

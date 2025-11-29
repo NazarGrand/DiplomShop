@@ -66,7 +66,7 @@ const AdminPage = () => {
                 width: "20px",
               },
               "&.active": {
-                bg: "emerald600",
+                bg: "#25365c",
                 color: "white",
               },
               "&:not(.active)": {
