@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, Upload, Loader } from "lucide-react";
+import { PlusCircle, Upload, Loader, X } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 
 const categories = [
@@ -21,7 +21,7 @@ const CreateProductForm = () => {
     description: "",
     price: "",
     category: "",
-    image: "",
+    images: [],
   });
 
   const { createProduct, loading } = useProductStore();
@@ -35,7 +35,7 @@ const CreateProductForm = () => {
         description: "",
         price: "",
         category: "",
-        image: "",
+        images: [],
       });
     } catch {
       console.log("error creating a product");
@@ -43,16 +43,32 @@ const CreateProductForm = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      const readers = files.map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      });
 
-      reader.onloadend = () => {
-        setNewProduct({ ...newProduct, image: reader.result });
-      };
-
-      reader.readAsDataURL(file);
+      Promise.all(readers).then((results) => {
+        setNewProduct({
+          ...newProduct,
+          images: [...newProduct.images, ...results],
+        });
+      });
     }
+    // Скидаємо input, щоб можна було вибрати ті самі файли знову
+    e.target.value = "";
+  };
+
+  const removeImage = (index) => {
+    setNewProduct({
+      ...newProduct,
+      images: newProduct.images.filter((_, i) => i !== index),
+    });
   };
 
   return (
@@ -313,22 +329,82 @@ const CreateProductForm = () => {
         </div>
 
         <div className="form-group">
+          <label className="form-label">Зображення товару</label>
           <div className="file-upload-wrapper">
             <input
               type="file"
-              id="image"
+              id="images"
               className="file-input"
               accept="image/*"
+              multiple
               onChange={handleImageChange}
             />
-            <label htmlFor="image" className="file-label">
+            <label htmlFor="images" className="file-label">
               <Upload className="upload-icon" />
-              Завантажити зображення
+              Завантажити зображення (можна вибрати кілька)
             </label>
-            {newProduct.image && (
-              <span className="upload-status">Зображення завантажено</span>
+            {newProduct.images.length > 0 && (
+              <span className="upload-status">
+                Завантажено: {newProduct.images.length}
+              </span>
             )}
           </div>
+          {newProduct.images.length > 0 && (
+            <div
+              sx={{
+                mt: 3,
+                display: "grid",
+                gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(3, 1fr)"],
+                gap: 2,
+                ".image-preview": {
+                  position: "relative",
+                  width: "100%",
+                  aspectRatio: "1 / 1",
+                  borderRadius: "md",
+                  overflow: "hidden",
+                  border: "1px solid",
+                  borderColor: "gray600",
+                  ".preview-image": {
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  },
+                  ".remove-button": {
+                    position: "absolute",
+                    top: 1,
+                    right: 1,
+                    p: 1,
+                    borderRadius: "full",
+                    bg: "rgba(0, 0, 0, 0.7)",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bg: "rgba(220, 38, 38, 0.9)",
+                    },
+                  },
+                },
+              }}
+            >
+              {newProduct.images.map((img, index) => (
+                <div key={index} className="image-preview">
+                  <img src={img} alt={`Preview ${index + 1}`} className="preview-image" />
+                  <button
+                    type="button"
+                    className="remove-button"
+                    onClick={() => removeImage(index)}
+                    aria-label="Видалити зображення"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <button type="submit" className="submit-button" disabled={loading}>

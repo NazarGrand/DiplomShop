@@ -32,7 +32,13 @@ const ProductPage = () => {
     }
   }, [id, fetchProductById]);
 
-  const productImages = currentProduct?.image ? [currentProduct.image] : [];
+  // Підтримка масиву зображень з зворотною сумісністю
+  const productImages =
+    currentProduct?.images && currentProduct.images.length > 0
+      ? currentProduct.images
+      : currentProduct?.image
+      ? [currentProduct.image]
+      : [];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) =>

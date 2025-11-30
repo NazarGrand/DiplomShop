@@ -150,7 +150,14 @@ const ProductsList = () => {
               <td className="table-cell">
                 <div className="product-info">
                   <div className="product-image">
-                    <img src={product.image} alt={product.name} />
+                    <img 
+                      src={
+                        (product.images && product.images.length > 0)
+                          ? product.images[0]
+                          : product.image || ""
+                      } 
+                      alt={product.name} 
+                    />
                   </div>
                   <div className="product-name">{product.name}</div>
                 </div>

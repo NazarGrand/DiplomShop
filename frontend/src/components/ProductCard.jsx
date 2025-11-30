@@ -10,6 +10,12 @@ const ProductCard = ({ product }) => {
   const { user } = useUserStore();
   const { addToCart } = useCartStore();
 
+  // Підтримка масиву зображень з зворотною сумісністю
+  const productImage =
+    product.images && product.images.length > 0
+      ? product.images[0]
+      : product.image || "";
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -125,8 +131,8 @@ const ProductCard = ({ product }) => {
         <div className="product-image-wrapper">
           <img
             className="product-image"
-            src={product.image}
-            alt="product image"
+            src={productImage}
+            alt={product.name || "product image"}
           />
           <div className="product-overlay" />
         </div>

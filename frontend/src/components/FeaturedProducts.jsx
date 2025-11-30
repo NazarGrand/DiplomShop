@@ -185,7 +185,11 @@ const FeaturedProducts = ({ featuredProducts }) => {
                   <div className="product-card">
                     <div className="product-image-wrapper">
                       <img
-                        src={product.image}
+                        src={
+                          product.images && product.images.length > 0
+                            ? product.images[0]
+                            : product.image || ""
+                        }
                         alt={product.name}
                         className="product-image"
                       />

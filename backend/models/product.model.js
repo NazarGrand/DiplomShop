@@ -15,9 +15,20 @@ const productSchema = new mongoose.Schema(
 			min: 0,
 			required: true,
 		},
+		images: {
+			type: [String],
+			required: [true, "At least one image is required"],
+			validate: {
+				validator: function (v) {
+					return v && v.length > 0;
+				},
+				message: "At least one image is required",
+			},
+		},
+		// Залишаємо для зворотної сумісності (deprecated)
 		image: {
 			type: String,
-			required: [true, "Image is required"],
+			required: false,
 		},
 		category: {
 			type: String,

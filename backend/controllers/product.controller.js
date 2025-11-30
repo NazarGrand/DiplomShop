@@ -27,23 +27,49 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, image, category } = req.body;
+    const { name, description, price, images, image, category } = req.body;
 
-    let cloudinaryResponse = null;
+    // Підтримка як масиву зображень, так і одного зображення (зворотна сумісність)
+    let imageArray = [];
 
-    if (image) {
-      cloudinaryResponse = await cloudinary.uploader.upload(image, {
+    if (images && Array.isArray(images) && images.length > 0) {
+      // Завантажуємо всі зображення на Cloudinary
+      const uploadPromises = images.map((img) => {
+        if (img) {
+          return cloudinary.uploader.upload(img, {
+            folder: "products",
+          });
+        }
+        return null;
+      });
+
+      const cloudinaryResponses = await Promise.all(uploadPromises);
+      imageArray = cloudinaryResponses
+        .filter((response) => response && response.secure_url)
+        .map((response) => response.secure_url);
+    } else if (image) {
+      // Зворотна сумісність: якщо передано одне зображення
+      const cloudinaryResponse = await cloudinary.uploader.upload(image, {
         folder: "products",
       });
+      if (cloudinaryResponse?.secure_url) {
+        imageArray = [cloudinaryResponse.secure_url];
+      }
+    }
+
+    if (imageArray.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "At least one image is required" });
     }
 
     const product = await Product.create({
       name,
       description,
       price,
-      image: cloudinaryResponse?.secure_url
-        ? cloudinaryResponse.secure_url
-        : "",
+      images: imageArray,
+      // Залишаємо для зворотної сумісності
+      image: imageArray[0],
       category,
     });
 
@@ -62,14 +88,30 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    if (product.image) {
-      const publicId = product.image.split("/").pop().split(".")[0];
-      try {
-        await cloudinary.uploader.destroy(`products/${publicId}`);
-        console.log("deleted image from cloduinary");
-      } catch (error) {
-        console.log("error deleting image from cloduinary", error);
-      }
+    // Видаляємо всі зображення з Cloudinary
+    const imagesToDelete =
+      product.images && product.images.length > 0
+        ? product.images
+        : product.image
+        ? [product.image]
+        : [];
+
+    if (imagesToDelete.length > 0) {
+      const deletePromises = imagesToDelete.map((imgUrl) => {
+        if (imgUrl) {
+          try {
+            const publicId = imgUrl.split("/").pop().split(".")[0];
+            return cloudinary.uploader.destroy(`products/${publicId}`);
+          } catch (error) {
+            console.log("error deleting image from cloudinary", error);
+            return null;
+          }
+        }
+        return null;
+      });
+
+      await Promise.all(deletePromises);
+      console.log("deleted images from cloudinary");
     }
 
     await Product.findByIdAndDelete(req.params.id);
@@ -92,7 +134,8 @@ export const getRecommendedProducts = async (req, res) => {
           _id: 1,
           name: 1,
           description: 1,
-          image: 1,
+          images: 1,
+          image: 1, // Зворотна сумісність
           price: 1,
         },
       },
