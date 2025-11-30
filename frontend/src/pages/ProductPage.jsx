@@ -16,6 +16,11 @@ import {
   ZoomIn,
   CreditCard,
   Info,
+  Truck,
+  Shield,
+  HelpCircle,
+  CheckCircle,
+  ChevronDown,
 } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 import { useCartStore } from "../stores/useCartStore";
@@ -40,6 +45,7 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImageIndex, setLightboxImageIndex] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -224,7 +230,8 @@ const ProductPage = () => {
           maxWidth: "1280px",
           mx: "auto",
           px: ["1rem", "1.5rem", "2rem"],
-          py: 6,
+          pt: 6,
+          pb: 3,
           ".breadcrumbs": {
             display: "flex",
             alignItems: "center",
@@ -703,6 +710,229 @@ const ProductPage = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <PeopleAlsoBought />
+        </motion.div>
+      </Box>
+
+      {/* Додаткові секції */}
+      <Box
+        sx={{
+          position: "relative",
+          zIndex: 10,
+          maxWidth: "1280px",
+          mx: "auto",
+          px: ["1rem", "1.5rem", "2rem"],
+          py: 3,
+          ".info-sections": {
+            display: "grid",
+            gridTemplateColumns: ["1fr", "1fr", "1fr 1fr"],
+            gap: 6,
+            mb: 5,
+            ".info-section": {
+              bg: "gray800",
+              borderRadius: "lg",
+              p: 4,
+              border: "1px solid",
+              borderColor: "gray700",
+              ".section-header": {
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                mb: 3,
+                ".section-icon": {
+                  color: "emerald400",
+                },
+                ".section-title": {
+                  fontSize: "1.25rem",
+                  fontWeight: 700,
+                  color: "white",
+                },
+              },
+              ".section-content": {
+                color: "gray300",
+                lineHeight: 1.7,
+                ".benefit-item": {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 2,
+                  ".benefit-icon": {
+                    color: "emerald400",
+                    flexShrink: 0,
+                  },
+                },
+              },
+            },
+          },
+          ".faq-section": {
+            bg: "gray800",
+            borderRadius: "lg",
+            p: 4,
+            border: "1px solid",
+            borderColor: "gray700",
+            ".faq-title": {
+              fontSize: "1.5rem",
+              fontWeight: 700,
+              color: "emerald400",
+              mb: 4,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            },
+            ".faq-item": {
+              mb: 2,
+              borderBottom: "1px solid",
+              borderColor: "gray700",
+              "&:last-child": {
+                borderBottom: "none",
+                mb: 0,
+              },
+              ".faq-question": {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                py: 3,
+                cursor: "pointer",
+                color: "white",
+                fontSize: "1rem",
+                fontWeight: 600,
+                transition: "color 0.2s ease",
+                "&:hover": {
+                  color: "emerald400",
+                },
+                ".faq-icon": {
+                  transition: "transform 0.3s ease",
+                  color: "emerald400",
+                  "&.open": {
+                    transform: "rotate(180deg)",
+                  },
+                },
+              },
+              ".faq-answer": {
+                maxHeight: 0,
+                overflow: "hidden",
+                transition: "max-height 0.3s ease, padding 0.3s ease",
+                color: "gray300",
+                lineHeight: 1.7,
+                "&.open": {
+                  maxHeight: "500px",
+                  pb: 3,
+                },
+              },
+            },
+          },
+        }}
+      >
+        <div className="info-sections">
+          <motion.div
+            className="info-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="section-header">
+              <Truck className="section-icon" size={24} />
+              <h3 className="section-title">Доставка та повернення</h3>
+            </div>
+            <div className="section-content">
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Безкоштовна доставка при замовленні від $1000</span>
+              </div>
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Швидка доставка 1-3 дні по всій Україні</span>
+              </div>
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Можливість повернення протягом 14 днів</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="info-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <div className="section-header">
+              <Shield className="section-icon" size={24} />
+              <h3 className="section-title">Гарантія та підтримка</h3>
+            </div>
+            <div className="section-content">
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Офіційна гарантія від виробника</span>
+              </div>
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Технічна підтримка 24/7</span>
+              </div>
+              <div className="benefit-item">
+                <CheckCircle className="benefit-icon" size={18} />
+                <span>Оригінальні запчастини та аксесуари</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="faq-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <h2 className="faq-title">
+            <HelpCircle size={24} />
+            Часті питання
+          </h2>
+          {[
+            {
+              question: "Як швидко я отримаю замовлення?",
+              answer:
+                "Доставка здійснюється протягом 1-3 робочих днів по всій Україні. При замовленні до 12:00 можлива доставка в той самий день (залежить від міста).",
+            },
+            {
+              question: "Чи можна повернути товар?",
+              answer:
+                "Так, ви можете повернути товар протягом 14 днів з моменту покупки, якщо він не використовувався та зберігає товарний вигляд. Повернення коштів здійснюється протягом 5-7 робочих днів.",
+            },
+            {
+              question: "Яка гарантія на товар?",
+              answer:
+                "На всі товари надається офіційна гарантія від виробника. Термін гарантії залежить від категорії товару та вказаний в документації. Ми надаємо повну підтримку протягом гарантійного періоду.",
+            },
+            {
+              question: "Чи є можливість оплатити при отриманні?",
+              answer:
+                "Так, ми підтримуємо оплату готівкою або карткою при отриманні товару. Також доступна оплата онлайн через безпечні платіжні системи.",
+            },
+            {
+              question: "Чи можна забрати товар самовивозом?",
+              answer:
+                "Так, ви можете забрати товар з наших магазинів. Після оформлення замовлення ми повідомимо вас про готовність товару до видачі. Самовивіз безкоштовний.",
+            },
+          ].map((faq, index) => (
+            <div key={index} className="faq-item">
+              <div
+                className="faq-question"
+                onClick={() =>
+                  setOpenFaqIndex(openFaqIndex === index ? null : index)
+                }
+              >
+                <span>{faq.question}</span>
+                <ChevronDown
+                  className={`faq-icon ${openFaqIndex === index ? "open" : ""}`}
+                  size={20}
+                />
+              </div>
+              <div
+                className={`faq-answer ${openFaqIndex === index ? "open" : ""}`}
+              >
+                {faq.answer}
+              </div>
+            </div>
+          ))}
         </motion.div>
       </Box>
 
