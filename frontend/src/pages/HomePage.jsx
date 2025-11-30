@@ -6,16 +6,7 @@ import { Box } from "theme-ui";
 import CategoryItem from "../components/CategoryItem";
 import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
-import {
-  ShoppingBag,
-  Shield,
-  Truck,
-  Headphones,
-  TrendingUp,
-  Award,
-  Users,
-  Package,
-} from "lucide-react";
+import { Shield, Truck, Headphones, TrendingUp, Award } from "lucide-react";
 
 const categories = [
   { href: "/smartphones", name: "Смартфони", imageUrl: "/smartphones.jpg" },
@@ -33,7 +24,8 @@ const categories = [
 ];
 
 const HomePage = () => {
-  const { fetchFeaturedProducts, featuredProducts, loading } = useProductStore();
+  const { fetchFeaturedProducts, featuredProducts, loading } =
+    useProductStore();
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -158,7 +150,8 @@ const HomePage = () => {
             },
           }}
         >
-          <h2
+          <Box
+            as="h2"
             sx={{
               textAlign: "center",
               fontSize: ["2rem", "2.5rem"],
@@ -170,7 +163,7 @@ const HomePage = () => {
             }}
           >
             Чому обирають нас
-          </h2>
+          </Box>
           <div className="benefits-grid">
             {[
               {
@@ -191,7 +184,8 @@ const HomePage = () => {
               {
                 icon: Award,
                 title: "Оригінальна продукція",
-                description: "Тільки сертифіковані товари від офіційних дилерів",
+                description:
+                  "Тільки сертифіковані товари від офіційних дилерів",
               },
             ].map((benefit, index) => (
               <div key={index} className="benefit-card">
@@ -204,20 +198,29 @@ const HomePage = () => {
         </motion.div>
 
         {/* Категорії */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+        <Box
+          id="categories-section"
+          sx={{
+            scrollMarginTop: "100px", // Відступ для фіксованого хедера
+          }}
         >
-          <h1 className="home-title">Основні категорії</h1>
-          <p className="home-subtitle">Широкий вибір техніки в одному місці</p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <h1 className="home-title">Основні категорії</h1>
+            <p className="home-subtitle">
+              Широкий вибір техніки в одному місці
+            </p>
 
-          <div className="categories-grid">
-            {categories.map((category) => (
-              <CategoryItem category={category} key={category.name} />
-            ))}
-          </div>
-        </motion.div>
+            <div className="categories-grid">
+              {categories.map((category) => (
+                <CategoryItem category={category} key={category.name} />
+              ))}
+            </div>
+          </motion.div>
+        </Box>
 
         <motion.div
           className="promo-banner"
@@ -241,7 +244,8 @@ const HomePage = () => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: "radial-gradient(circle at 30% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)",
+              background:
+                "radial-gradient(circle at 30% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)",
               pointerEvents: "none",
             },
             ".promo-content": {

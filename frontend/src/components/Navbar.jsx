@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
-import { ShoppingCart, UserPlus, LogIn, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ShoppingCart, UserPlus, LogIn, LogOut, Grid3x3 } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
@@ -9,6 +9,25 @@ import { useCartStore } from "../stores/useCartStore";
 const Navbar = () => {
   const { user, logout } = useUserStore();
   const { cart } = useCartStore();
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  const scrollToCategories = (e) => {
+    e.preventDefault();
+    if (isHomePage) {
+      const categoriesSection = document.getElementById("categories-section");
+      if (categoriesSection) {
+        categoriesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
+  const handleHomeClick = (e) => {
+    if (isHomePage) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <Box
@@ -153,9 +172,25 @@ const Navbar = () => {
           </Link>
 
           <nav className="navbar-nav">
-            <Link to="/" className="nav-link">
+            <Link to="/" className="nav-link" onClick={handleHomeClick}>
               Головна
             </Link>
+            {isHomePage && (
+              <Box
+                as="a"
+                href="#categories-section"
+                className="nav-link"
+                onClick={scrollToCategories}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Grid3x3 size={18} />
+                Категорії
+              </Box>
+            )}
             {user && (
               <Link to="/cart" className="cart-link">
                 <ShoppingCart className="cart-icon" size={20} />
