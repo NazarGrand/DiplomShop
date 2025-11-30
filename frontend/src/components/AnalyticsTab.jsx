@@ -50,12 +50,11 @@ const AnalyticsTab = () => {
       sx={{
         maxWidth: "1280px",
         mx: "auto",
-        px: [4, 6, 8],
         ".analytics-cards": {
           display: "grid",
           gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(4, 1fr)"],
-          gap: 6,
-          mb: 8,
+          gap: 4,
+          mb: 5,
         },
         ".analytics-chart": {
           bg: "rgba(31, 41, 55, 0.6)",
@@ -139,27 +138,26 @@ const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
     sx={{
       bg: "gray800",
       borderRadius: "lg",
-      p: 6,
+      p: 3,
       boxShadow: "medium",
       overflow: "hidden",
       position: "relative",
       ".card-content": {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
         position: "relative",
         zIndex: 10,
         ".card-info": {
           ".card-title": {
-            color: "rgba(16, 185, 129, 0.8)",
-            fontSize: "0.875rem",
+            color: "#4dbeff",
+            fontSize: "1rem",
             mb: 1,
             fontWeight: 600,
+            textAlign: "center",
           },
           ".card-value": {
             color: "white",
             fontSize: "1.875rem",
             fontWeight: 700,
+            textAlign: "center",
           },
         },
       },
@@ -167,18 +165,8 @@ const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
         position: "absolute",
         inset: 0,
         background:
-          "linear-gradient(to bottom right, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.9))",
+          "linear-gradient(to bottom right, rgba(77, 190, 255, 0.6), rgba(77, 190, 255, 0.9))",
         opacity: 0.3,
-      },
-      ".card-icon": {
-        position: "absolute",
-        bottom: "-16px",
-        right: "-16px",
-        color: "rgba(5, 150, 105, 0.5)",
-        "& svg": {
-          height: "128px",
-          width: "128px",
-        },
       },
     }}
   >
@@ -189,8 +177,5 @@ const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
       </div>
     </div>
     <div className="card-gradient" />
-    <div className="card-icon">
-      <Icon />
-    </div>
   </motion.div>
 );

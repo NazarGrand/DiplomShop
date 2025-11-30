@@ -50,6 +50,7 @@ const FeaturedProducts = ({ featuredProducts }) => {
             fontWeight: 900,
             color: "emerald400",
             mb: 4,
+            "-webkit-text-stroke": "1.9px #2a3a46",
           },
           ".featured-carousel": {
             position: "relative",
