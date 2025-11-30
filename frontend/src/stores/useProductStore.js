@@ -2,8 +2,9 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import axios from "../lib/axios";
 
-export const useProductStore = create((set) => ({
+export const useProductStore = create((set, get) => ({
 	products: [],
+	featuredProducts: [],
 	loading: false,
 
 	setProducts: (products) => set({ products }),
@@ -46,37 +47,55 @@ export const useProductStore = create((set) => ({
 			await axios.delete(`/products/${productId}`);
 			set((prevProducts) => ({
 				products: prevProducts.products.filter((product) => product._id !== productId),
+				featuredProducts: prevProducts.featuredProducts.filter(
+					(product) => product._id !== productId
+				),
 				loading: false,
 			}));
 		} catch (error) {
 			set({ loading: false });
-			toast.error(error.response.data.error || "Failed to delete product");
+			toast.error(error.response?.data?.error || "Не вдалося видалити товар");
 		}
 	},
 	toggleFeaturedProduct: async (productId) => {
 		set({ loading: true });
 		try {
 			const response = await axios.patch(`/products/${productId}`);
-			// this will update the isFeatured prop of the product
+			const updatedProduct = response.data;
+			
+			// Оновлюємо products для адмін панелі
 			set((prevProducts) => ({
 				products: prevProducts.products.map((product) =>
-					product._id === productId ? { ...product, isFeatured: response.data.isFeatured } : product
+					product._id === productId ? { ...product, isFeatured: updatedProduct.isFeatured } : product
 				),
-				loading: false,
 			}));
+			
+			// Оновлюємо featured products - перезавантажуємо з сервера для актуальності
+			await get().fetchFeaturedProducts();
+			
+			// Показуємо повідомлення про успіх
+			if (updatedProduct.isFeatured) {
+				toast.success("Товар додано до рекомендованих");
+			} else {
+				toast.success("Товар видалено з рекомендованих");
+			}
 		} catch (error) {
 			set({ loading: false });
-			toast.error(error.response.data.error || "Failed to update product");
+			toast.error(error.response?.data?.error || "Не вдалося оновити товар");
 		}
 	},
 	fetchFeaturedProducts: async () => {
 		set({ loading: true });
 		try {
 			const response = await axios.get("/products/featured");
-			set({ products: response.data, loading: false });
+			set({ featuredProducts: response.data || [], loading: false });
 		} catch (error) {
-			set({ error: "Failed to fetch products", loading: false });
-			console.log("Error fetching featured products:", error);
+			// Якщо помилка (наприклад, 404), встановлюємо порожній масив
+			set({ featuredProducts: [], loading: false });
+			// Не показуємо помилку, якщо просто немає featured products
+			if (error.response?.status !== 404) {
+				console.log("Error fetching featured products:", error);
+			}
 		}
 	},
 }));
