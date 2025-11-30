@@ -2,13 +2,17 @@
 import toast from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
 import { Box } from "theme-ui";
+import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
 const ProductCard = ({ product }) => {
   const { user } = useUserStore();
   const { addToCart } = useCartStore();
-  const handleAddToCart = () => {
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!user) {
       toast.error("Будь ласка, увійдіть, щоб додати товари до кошика", {
         id: "login",
@@ -32,17 +36,26 @@ const ProductCard = ({ product }) => {
         border: "1px solid",
         borderColor: "gray700",
         boxShadow: "medium",
+        ".product-link": {
+          textDecoration: "none",
+          color: "inherit",
+        },
         ".product-image-wrapper": {
           position: "relative",
           mx: 3,
           mt: 3,
           display: "flex",
-          height: "240px",
+          height: "300px",
           overflow: "hidden",
           borderRadius: "xl",
+          cursor: "pointer",
           ".product-image": {
             objectFit: "cover",
             width: "100%",
+            transition: "transform 0.3s ease",
+          },
+          "&:hover .product-image": {
+            transform: "scale(1.05)",
           },
           ".product-overlay": {
             position: "absolute",
@@ -61,6 +74,10 @@ const ProductCard = ({ product }) => {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            cursor: "pointer",
+            "&:hover": {
+              color: "emerald400",
+            },
           },
           ".product-price-wrapper": {
             mt: 1,
@@ -104,17 +121,21 @@ const ProductCard = ({ product }) => {
         },
       }}
     >
-      <div className="product-image-wrapper">
-        <img
-          className="product-image"
-          src={product.image}
-          alt="product image"
-        />
-        <div className="product-overlay" />
-      </div>
+      <Link to={`/product/${product._id}`} className="product-link">
+        <div className="product-image-wrapper">
+          <img
+            className="product-image"
+            src={product.image}
+            alt="product image"
+          />
+          <div className="product-overlay" />
+        </div>
+      </Link>
 
       <div className="product-content">
-        <h5 className="product-name">{product.name}</h5>
+        <Link to={`/product/${product._id}`} sx={{ textDecoration: "none" }}>
+          <h5 className="product-name">{product.name}</h5>
+        </Link>
         <div className="product-price-wrapper">
           <p>
             <span className="product-price">${product.price}</span>

@@ -101,6 +101,43 @@ export const getRecommendedProducts = async (req, res) => {
     res.json(products);
   } catch (error) {
     console.log("Error in getRecommendedProducts controller", error.message);
+    // Перевірка на помилки підключення
+    if (
+      error.message.includes("connection") ||
+      error.message.includes("timeout") ||
+      error.message.includes("ETIMEDOUT")
+    ) {
+      return res.status(503).json({
+        message: "Service unavailable - Database connection error",
+        error:
+          "Cannot connect to database. Please check your MongoDB Atlas network access settings.",
+      });
+    }
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    console.log("Error in getProductById controller", error.message);
+    // Перевірка на помилки підключення
+    if (
+      error.message.includes("connection") ||
+      error.message.includes("timeout") ||
+      error.message.includes("ETIMEDOUT")
+    ) {
+      return res.status(503).json({
+        message: "Service unavailable - Database connection error",
+        error:
+          "Cannot connect to database. Please check your MongoDB Atlas network access settings.",
+      });
+    }
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

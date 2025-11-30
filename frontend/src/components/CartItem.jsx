@@ -93,7 +93,7 @@ const CartItem = ({ item }) => {
               },
             },
             ".cart-item-price": {
-              textAlign: "end",
+              textAlign: "center",
               width: ["auto", "128px"],
               order: [4, 4],
               ".price-value": {

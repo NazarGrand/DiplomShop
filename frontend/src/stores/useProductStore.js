@@ -5,9 +5,20 @@ import axios from "../lib/axios";
 export const useProductStore = create((set, get) => ({
 	products: [],
 	featuredProducts: [],
+	currentProduct: null,
 	loading: false,
 
 	setProducts: (products) => set({ products }),
+	fetchProductById: async (productId) => {
+		set({ loading: true });
+		try {
+			const response = await axios.get(`/products/${productId}`);
+			set({ currentProduct: response.data, loading: false });
+		} catch (error) {
+			set({ currentProduct: null, loading: false });
+			toast.error(error.response?.data?.message || "Не вдалося завантажити товар");
+		}
+	},
 	createProduct: async (productData) => {
 		set({ loading: true });
 		try {
