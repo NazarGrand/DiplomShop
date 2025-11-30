@@ -41,16 +41,13 @@ const CategoryItem = ({ category }) => {
             bottom: 0,
             left: 0,
             right: 0,
-            p: 4,
+            p: 2,
             zIndex: 20,
             ".category-title": {
               color: "white",
-              fontSize: "1.5rem",
+              fontSize: "2rem",
               fontWeight: 900,
-            },
-            ".category-description": {
-              color: "rgba(229, 231, 235, 1)",
-              fontSize: "0.875rem",
+              textAlign: "center",
             },
           },
         },
@@ -66,7 +63,6 @@ const CategoryItem = ({ category }) => {
         />
         <div className="category-content">
           <h3 className="category-title">{category.name}</h3>
-          <p className="category-description">Переглянути {category.name}</p>
         </div>
       </Link>
     </Box>

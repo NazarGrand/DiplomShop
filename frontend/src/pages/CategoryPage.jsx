@@ -29,9 +29,11 @@ const CategoryPage = () => {
           py: 16,
           ".category-title": {
             textAlign: "center",
-            fontSize: ["2.25rem", "3rem"],
+            fontSize: ["2.3rem", "3rem"],
             fontWeight: 900,
             color: "emerald400",
+            fontFamily: "oswald",
+            letterSpacing: "2px",
           },
           ".products-grid": {
             display: "grid",

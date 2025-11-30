@@ -35,6 +35,7 @@ export const theme: Theme = {
     body: "'Ubuntu', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     heading:
       "'Ubuntu', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    oswald: "'Oswald', sans-serif",
   },
   fontWeights: {
     body: 400,

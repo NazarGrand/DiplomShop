@@ -1,1 +1,6 @@
 /* Tailwind removed - using theme-ui */
+
+/* Oswald font for category titles */
+.category-title {
+  font-family: "Oswald", sans-serif !important;
+}

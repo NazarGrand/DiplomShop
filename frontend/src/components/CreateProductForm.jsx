@@ -5,13 +5,14 @@ import { PlusCircle, Upload, Loader } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 
 const categories = [
-  "jeans",
-  "t-shirts",
-  "shoes",
-  "glasses",
-  "jackets",
-  "suits",
-  "bags",
+  "Смартфони",
+  "Комп’ютери",
+  "Планшети",
+  "Розумні годинники",
+  "Навушники",
+  "Ноутбуки",
+  "Геймінг",
+  "Телевізори",
 ];
 
 const CreateProductForm = () => {
@@ -123,8 +124,8 @@ const CreateProductForm = () => {
               resize: "vertical",
               "&:focus": {
                 outline: "none",
-                borderColor: "emerald500",
-                boxShadow: "0 0 0 2px rgba(16, 185, 129, 0.5)",
+                borderColor: "#6f82a0",
+                boxShadow: "0 0 0 1px #6f82a0",
               },
             },
             ".form-select": {
@@ -143,8 +144,8 @@ const CreateProductForm = () => {
               cursor: "pointer",
               "&:focus": {
                 outline: "none",
-                borderColor: "emerald500",
-                boxShadow: "0 0 0 2px rgba(16, 185, 129, 0.5)",
+                borderColor: "#6f82a0",
+                boxShadow: "0 0 0 1px #6f82a0",
               },
             },
             ".file-upload-wrapper": {

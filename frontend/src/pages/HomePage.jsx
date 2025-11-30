@@ -6,13 +6,18 @@ import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
 
 const categories = [
-  { href: "/jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
-  { href: "/t-shirts", name: "T-shirts", imageUrl: "/tshirts.jpg" },
-  { href: "/shoes", name: "Shoes", imageUrl: "/shoes.jpg" },
-  { href: "/glasses", name: "Glasses", imageUrl: "/glasses.png" },
-  { href: "/jackets", name: "Jackets", imageUrl: "/jackets.jpg" },
-  { href: "/suits", name: "Suits", imageUrl: "/suits.jpg" },
-  { href: "/bags", name: "Bags", imageUrl: "/bags.jpg" },
+  { href: "/smartphones", name: "Смартфони", imageUrl: "/smartphones.jpg" },
+  { href: "/computers", name: "Комп’ютери", imageUrl: "/computers.jpg" },
+  { href: "/tablets", name: "Планшети", imageUrl: "/tablets.jpg" },
+  {
+    href: "/smart-watches",
+    name: "Розумні годинники",
+    imageUrl: "/smart-watches.jpg",
+  },
+  { href: "/headphone", name: "Навушники", imageUrl: "/headphone.jpg" },
+  { href: "/laptops", name: "Ноутбуки", imageUrl: "/laptops.jpg" },
+  { href: "/gaming", name: "Геймінг", imageUrl: "/gaming.jpg" },
+  { href: "/televisions", name: "Телевізори", imageUrl: "/televisions.jpg" },
 ];
 
 const HomePage = () => {
