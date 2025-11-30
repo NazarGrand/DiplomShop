@@ -26,7 +26,7 @@ const CategoryPage = () => {
           maxWidth: "1280px",
           mx: "auto",
           px: ["1rem", "1.5rem", "2rem"],
-          py: 16,
+          py: 5,
           ".category-title": {
             textAlign: "center",
             fontSize: ["2.3rem", "3rem"],

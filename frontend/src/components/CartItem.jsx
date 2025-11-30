@@ -53,20 +53,6 @@ const CartItem = ({ item }) => {
               fontSize: "0.875rem",
               color: "gray400",
             },
-            ".cart-item-remove": {
-              display: "inline-flex",
-              alignItems: "center",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "#F87171",
-              cursor: "pointer",
-              "&:hover": {
-                color: "#FCA5A5",
-                textDecoration: "underline",
-              },
-              background: "transparent",
-              border: "none",
-            },
           },
           ".cart-item-controls": {
             display: "flex",
@@ -116,6 +102,22 @@ const CartItem = ({ item }) => {
                 color: "emerald400",
               },
             },
+
+            ".cart-item-remove": {
+              display: "inline-flex",
+              alignItems: "center",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              color: "#F87171",
+              cursor: "pointer",
+              order: [5, 5],
+              "&:hover": {
+                color: "#FCA5A5",
+                textDecoration: "underline",
+              },
+              background: "transparent",
+              border: "none",
+            },
           },
         },
       }}
@@ -127,12 +129,6 @@ const CartItem = ({ item }) => {
         <div className="cart-item-info">
           <p className="cart-item-name">{item.name}</p>
           <p className="cart-item-description">{item.description}</p>
-          <button
-            className="cart-item-remove"
-            onClick={() => removeFromCart(item._id)}
-          >
-            <Trash />
-          </button>
         </div>
         <div className="cart-item-controls">
           <div className="quantity-controls">
@@ -153,6 +149,12 @@ const CartItem = ({ item }) => {
           <div className="cart-item-price">
             <p className="price-value">${item.price}</p>
           </div>
+          <button
+            className="cart-item-remove"
+            onClick={() => removeFromCart(item._id)}
+          >
+            <Trash />
+          </button>
         </div>
       </div>
     </Box>
