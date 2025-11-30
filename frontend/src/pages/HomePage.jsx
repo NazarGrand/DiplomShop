@@ -87,6 +87,7 @@ const HomePage = () => {
               fontFamily: "oswald",
               letterSpacing: "2px",
               lineHeight: 1.2,
+              "-webkit-text-stroke": "1.9px #2a3a46",
             },
             ".hero-subtitle": {
               fontSize: ["1.125rem", "1.25rem", "1.5rem"],
@@ -160,6 +161,7 @@ const HomePage = () => {
               mb: 3,
               fontFamily: "oswald",
               letterSpacing: "1px",
+              "-webkit-text-stroke": "1.9px #2a3a46",
             }}
           >
             Чому обирають нас
