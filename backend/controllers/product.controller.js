@@ -27,7 +27,15 @@ export const getFeaturedProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, images, image, category } = req.body;
+    const {
+      name,
+      description,
+      price,
+      images,
+      image,
+      category,
+      specifications,
+    } = req.body;
 
     // Підтримка як масиву зображень, так і одного зображення (зворотна сумісність)
     let imageArray = [];
@@ -71,6 +79,7 @@ export const createProduct = async (req, res) => {
       // Залишаємо для зворотної сумісності
       image: imageArray[0],
       category,
+      specifications: specifications || [],
     });
 
     res.status(201).json(product);

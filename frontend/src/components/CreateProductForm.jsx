@@ -22,7 +22,9 @@ const CreateProductForm = () => {
     price: "",
     category: "",
     images: [],
+    specifications: [],
   });
+  const [specInput, setSpecInput] = useState({ name: "", value: "" });
 
   const { createProduct, loading } = useProductStore();
 
@@ -36,7 +38,9 @@ const CreateProductForm = () => {
         price: "",
         category: "",
         images: [],
+        specifications: [],
       });
+      setSpecInput({ name: "", value: "" });
     } catch {
       console.log("error creating a product");
     }
@@ -68,6 +72,23 @@ const CreateProductForm = () => {
     setNewProduct({
       ...newProduct,
       images: newProduct.images.filter((_, i) => i !== index),
+    });
+  };
+
+  const addSpecification = () => {
+    if (specInput.name && specInput.value) {
+      setNewProduct({
+        ...newProduct,
+        specifications: [...newProduct.specifications, specInput],
+      });
+      setSpecInput({ name: "", value: "" });
+    }
+  };
+
+  const removeSpecification = (index) => {
+    setNewProduct({
+      ...newProduct,
+      specifications: newProduct.specifications.filter((_, i) => i !== index),
     });
   };
 
@@ -354,7 +375,11 @@ const CreateProductForm = () => {
               sx={{
                 mt: 3,
                 display: "grid",
-                gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(3, 1fr)"],
+                gridTemplateColumns: [
+                  "1fr",
+                  "repeat(2, 1fr)",
+                  "repeat(3, 1fr)",
+                ],
                 gap: 2,
                 ".image-preview": {
                   position: "relative",
@@ -392,12 +417,135 @@ const CreateProductForm = () => {
             >
               {newProduct.images.map((img, index) => (
                 <div key={index} className="image-preview">
-                  <img src={img} alt={`Preview ${index + 1}`} className="preview-image" />
+                  <img
+                    src={img}
+                    alt={`Preview ${index + 1}`}
+                    className="preview-image"
+                  />
                   <button
                     type="button"
                     className="remove-button"
                     onClick={() => removeImage(index)}
                     aria-label="Видалити зображення"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Характеристики товару</label>
+          <div
+            sx={{
+              display: "flex",
+              gap: 2,
+              my: 2,
+              ".spec-input": {
+                flex: 1,
+                bg: "gray700",
+                border: "1px solid",
+                borderColor: "gray600",
+                borderRadius: "md",
+                py: 2,
+                px: 3,
+                color: "white",
+                fontSize: "0.875rem",
+                "&:focus": {
+                  outline: "none",
+                  borderColor: "#6f82a0",
+                  boxShadow: "0 0 0 1px #6f82a0",
+                },
+              },
+              ".add-spec-button": {
+                px: 4,
+                py: 2,
+                bg: "#3f5f9a",
+                color: "white",
+                border: "none",
+                borderRadius: "md",
+                cursor: "pointer",
+                fontSize: "0.875rem",
+                fontWeight: 500,
+                "&:hover": {
+                  bg: "#324a7c",
+                },
+              },
+            }}
+          >
+            <input
+              type="text"
+              className="spec-input"
+              placeholder="Назва характеристики"
+              value={specInput.name}
+              onChange={(e) =>
+                setSpecInput({ ...specInput, name: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              className="spec-input"
+              placeholder="Значення"
+              value={specInput.value}
+              onChange={(e) =>
+                setSpecInput({ ...specInput, value: e.target.value })
+              }
+            />
+            <button
+              type="button"
+              className="add-spec-button"
+              onClick={addSpecification}
+            >
+              Додати
+            </button>
+          </div>
+          {newProduct.specifications.length > 0 && (
+            <div
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                ".spec-item": {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 2,
+                  bg: "gray700",
+                  borderRadius: "md",
+                  ".spec-text": {
+                    color: "gray300",
+                    fontSize: "0.875rem",
+                    ".spec-name": {
+                      fontWeight: 600,
+                      color: "white",
+                    },
+                  },
+                  ".remove-spec": {
+                    p: 1,
+                    bg: "transparent",
+                    color: "red",
+                    border: "none",
+                    cursor: "pointer",
+                    borderRadius: "md",
+                    "&:hover": {
+                      bg: "rgba(220, 38, 38, 0.1)",
+                    },
+                  },
+                },
+              }}
+            >
+              {newProduct.specifications.map((spec, index) => (
+                <div key={index} className="spec-item">
+                  <div className="spec-text">
+                    <span className="spec-name">{spec.name}:</span> {spec.value}
+                  </div>
+                  <button
+                    type="button"
+                    className="remove-spec"
+                    onClick={() => removeSpecification(index)}
+                    aria-label="Видалити характеристику"
                   >
                     <X size={16} />
                   </button>

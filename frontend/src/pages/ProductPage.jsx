@@ -10,14 +10,26 @@ import {
   ChevronRight,
   Package,
   Tag,
+  X,
+  Plus,
+  Minus,
+  ZoomIn,
+  CreditCard,
+  Info,
 } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 import { useCartStore } from "../stores/useCartStore";
 import { useUserStore } from "../stores/useUserStore";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "../lib/axios";
 import { getCategoryName } from "../utils/categoryNames";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PeopleAlsoBought from "../components/PeopleAlsoBought";
+
+const stripePromise = loadStripe(
+  "pk_test_51SYO3gRlJ2mGTNHuHYieNyIHQs5h3tH0rbzwjybUnWZ72baZiHoT3gBqq8EaXDXna1EwZiAPhzfqbyXMJ5WiWNPq00EjO9EieW"
+);
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -25,11 +37,19 @@ const ProductPage = () => {
   const { addToCart } = useCartStore();
   const { user } = useUserStore();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImageIndex, setLightboxImageIndex] = useState(0);
 
   useEffect(() => {
     if (id) {
       fetchProductById(id);
     }
+
+    // Cleanup: відновлюємо скрол при розмонтуванні компонента
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [id, fetchProductById]);
 
   // Підтримка масиву зображень з зворотною сумісністю
@@ -60,7 +80,89 @@ const ProductPage = () => {
       return;
     }
     if (currentProduct) {
-      addToCart(currentProduct);
+      // Додаємо товар з вказаною кількістю
+      for (let i = 0; i < quantity; i++) {
+        addToCart(currentProduct);
+      }
+      toast.success(`Додано ${quantity} шт. до кошика`);
+      setQuantity(1); // Скидаємо кількість після додавання
+    }
+  };
+
+  const openLightbox = (index) => {
+    setLightboxImageIndex(index);
+    setLightboxOpen(true);
+    // Блокуємо скрол сторінки
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    // Відновлюємо скрол сторінки
+    document.body.style.overflow = "unset";
+  };
+
+  const lightboxNextImage = () => {
+    setLightboxImageIndex((prev) =>
+      prev === productImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const lightboxPrevImage = () => {
+    setLightboxImageIndex((prev) =>
+      prev === 0 ? productImages.length - 1 : prev - 1
+    );
+  };
+
+  const increaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleBuyNow = async () => {
+    if (!user) {
+      toast.error("Будь ласка, увійдіть, щоб оформити замовлення", {
+        id: "login",
+      });
+      return;
+    }
+    if (!currentProduct) return;
+
+    try {
+      const stripe = await stripePromise;
+      const productImage =
+        currentProduct.images && currentProduct.images.length > 0
+          ? currentProduct.images[0]
+          : currentProduct.image || "";
+
+      const res = await axios.post("/payments/create-checkout-session", {
+        products: [
+          {
+            _id: currentProduct._id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            image: productImage,
+            quantity: quantity,
+          },
+        ],
+        couponCode: null,
+      });
+
+      const session = res.data;
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        toast.error("Помилка при оформленні замовлення");
+        console.error("Error:", result.error);
+      }
+    } catch (error) {
+      toast.error("Помилка при оформленні замовлення");
+      console.error("Error:", error);
     }
   };
 
@@ -146,7 +248,7 @@ const ProductPage = () => {
           ".product-content": {
             display: "grid",
             gridTemplateColumns: ["1fr", "1fr", "1fr 1fr"],
-            gap: 5,
+            gap: 6,
             mb: 5,
             ".product-images": {
               ".image-slider": {
@@ -158,10 +260,37 @@ const ProductPage = () => {
                 bg: "gray800",
                 border: "1px solid",
                 borderColor: "gray700",
+                cursor: "pointer",
                 ".main-image": {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                  transition: "transform 0.3s ease",
+                },
+                "&:hover .main-image": {
+                  transform: "scale(1.05)",
+                },
+                ".zoom-button": {
+                  position: "absolute",
+                  top: 2,
+                  right: 2,
+                  p: 2,
+                  borderRadius: "full",
+                  bg: "rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
+                  opacity: 0,
+                  "&:hover": {
+                    bg: "rgba(0, 0, 0, 0.8)",
+                  },
+                },
+                "&:hover .zoom-button": {
+                  opacity: 1,
                 },
                 ".slider-button": {
                   position: "absolute",
@@ -194,7 +323,7 @@ const ProductPage = () => {
               ".thumbnail-images": {
                 display: "flex",
                 gap: 2,
-                mt: 4,
+                mt: 2,
                 ".thumbnail": {
                   width: "80px",
                   height: "80px",
@@ -208,7 +337,7 @@ const ProductPage = () => {
                     borderColor: "emerald400",
                   },
                   "&:hover": {
-                    borderColor: "emerald500",
+                    borderColor: "#3f5f9a",
                   },
                 },
               },
@@ -253,6 +382,14 @@ const ProductPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
+                ".quantity-controls": {
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 3,
+                  ".quantity-button": {
+                    cursor: "pointer",
+                  },
+                },
                 ".add-to-cart-button": {
                   display: "flex",
                   alignItems: "center",
@@ -326,13 +463,28 @@ const ProductPage = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="product-images">
-            <div className="image-slider">
+            <div
+              className="image-slider"
+              onClick={() => openLightbox(currentImageIndex)}
+            >
               {productImages.length > 0 && (
-                <img
-                  src={productImages[currentImageIndex]}
-                  alt={currentProduct.name}
-                  className="main-image"
-                />
+                <>
+                  <img
+                    src={productImages[currentImageIndex]}
+                    alt={currentProduct.name}
+                    className="main-image"
+                  />
+                  <button
+                    className="zoom-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openLightbox(currentImageIndex);
+                    }}
+                    aria-label="Збільшити зображення"
+                  >
+                    <ZoomIn size={20} />
+                  </button>
+                </>
               )}
               {productImages.length > 1 && (
                 <>
@@ -340,7 +492,10 @@ const ProductPage = () => {
                     className={`slider-button prev ${
                       productImages.length <= 1 ? "hidden" : ""
                     }`}
-                    onClick={prevImage}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevImage();
+                    }}
                   >
                     <ChevronLeft size={24} />
                   </button>
@@ -348,7 +503,10 @@ const ProductPage = () => {
                     className={`slider-button next ${
                       productImages.length <= 1 ? "hidden" : ""
                     }`}
-                    onClick={nextImage}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextImage();
+                    }}
                   >
                     <ChevronRight size={24} />
                   </button>
@@ -394,11 +552,122 @@ const ProductPage = () => {
 
             <p className="product-description">{currentProduct.description}</p>
 
+            {currentProduct.specifications &&
+              currentProduct.specifications.length > 0 && (
+                <Box
+                  sx={{
+                    mt: 2,
+                    ".specifications-title": {
+                      fontSize: "1.25rem",
+                      fontWeight: 700,
+                      color: "emerald400",
+                      mb: 3,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                    },
+                    ".specifications-list": {
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      ".spec-item": {
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        py: 2,
+                        px: 3,
+                        bg: "gray800",
+                        borderRadius: "md",
+                        border: "1px solid",
+                        borderColor: "gray700",
+                        ".spec-name": {
+                          fontSize: "0.875rem",
+                          fontWeight: 600,
+                          color: "gray400",
+                        },
+                        ".spec-value": {
+                          fontSize: "0.875rem",
+                          color: "white",
+                          fontWeight: 500,
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <h3 className="specifications-title">
+                    <Info size={20} />
+                    Характеристики
+                  </h3>
+                  <div className="specifications-list">
+                    {currentProduct.specifications.map((spec, index) => (
+                      <div key={index} className="spec-item">
+                        <span className="spec-name">{spec.name}</span>
+                        <span className="spec-value">{spec.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Box>
+              )}
+
             <div className="product-actions">
+              <div className="quantity-selector">
+                <span className="quantity-label">Кількість:</span>
+                <div className="quantity-controls">
+                  <button
+                    className="quantity-button"
+                    onClick={decreaseQuantity}
+                    disabled={quantity <= 1}
+                    aria-label="Зменшити кількість"
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <span className="quantity-value">{quantity}</span>
+                  <button
+                    className="quantity-button"
+                    onClick={increaseQuantity}
+                    aria-label="Збільшити кількість"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+              </div>
               <button className="add-to-cart-button" onClick={handleAddToCart}>
                 <ShoppingCart size={22} />
-                Додати до кошика
+                Додати до кошика ({quantity} шт.)
               </button>
+
+              <Box
+                as="button"
+                className="buy-now-button"
+                onClick={handleBuyNow}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 2,
+                  width: "100%",
+                  py: 3,
+                  px: 4,
+                  bg: "#324a7c",
+                  color: "white",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  borderRadius: "lg",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bg: "#2563eb",
+                  },
+                  "&:focus": {
+                    outline: "none",
+                    boxShadow: "0 0 0 4px rgba(16, 185, 129, 0.3)",
+                  },
+                }}
+              >
+                <CreditCard size={22} />
+                Купити зараз
+              </Box>
 
               <div className="product-features">
                 <div className="feature-item">
@@ -436,6 +705,164 @@ const ProductPage = () => {
           <PeopleAlsoBought />
         </motion.div>
       </Box>
+
+      {/* Lightbox для зображень */}
+      {lightboxOpen && (
+        <Box
+          sx={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            bg: "rgba(0, 0, 0, 0.95)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            ".lightbox-content": {
+              position: "relative",
+              maxWidth: "90vw",
+              maxHeight: "80vh",
+              ".lightbox-image": {
+                maxWidth: "100%",
+                maxHeight: "80vh",
+                objectFit: "contain",
+              },
+              ".lightbox-close": {
+                position: "absolute",
+                top: "-2.5rem",
+                right: 0,
+                p: 1,
+                bg: "transparent",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+                borderRadius: "full",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  bg: "rgba(255, 255, 255, 0.1)",
+                },
+              },
+              ".lightbox-nav": {
+                position: "absolute",
+                top: "50%",
+                transform: "translateY(-50%)",
+                p: 3,
+                bg: "rgba(0, 0, 0, 0.5)",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+                borderRadius: "full",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  bg: "rgba(0, 0, 0, 0.7)",
+                },
+                "&.prev": {
+                  left: "-4rem",
+                },
+                "&.next": {
+                  right: "-4rem",
+                },
+              },
+              ".lightbox-thumbnails": {
+                position: "absolute",
+                bottom: "-4.5rem",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                gap: 2,
+                maxWidth: "90vw",
+                overflowX: "auto",
+                padding: "0.5rem",
+                "&::-webkit-scrollbar": {
+                  height: "4px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  bg: "rgba(255, 255, 255, 0.1)",
+                  borderRadius: "2px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  bg: "rgba(255, 255, 255, 0.3)",
+                  borderRadius: "2px",
+                  "&:hover": {
+                    bg: "rgba(255, 255, 255, 0.5)",
+                  },
+                },
+                ".lightbox-thumbnail": {
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "md",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  border: "2px solid",
+                  borderColor: "gray600",
+                  transition: "all 0.2s ease",
+                  opacity: 0.7,
+                  "&.active": {
+                    borderColor: "emerald400",
+                    opacity: 1,
+                    transform: "scale(1.1)",
+                  },
+                  "&:hover": {
+                    borderColor: "emerald500",
+                    opacity: 1,
+                  },
+                },
+              },
+            },
+          }}
+          onClick={closeLightbox}
+        >
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Закрити"
+            >
+              <X size={24} />
+            </button>
+            {productImages.length > 0 && (
+              <img
+                src={productImages[lightboxImageIndex]}
+                alt={`${currentProduct.name} ${lightboxImageIndex + 1}`}
+                className="lightbox-image"
+              />
+            )}
+            {productImages.length > 1 && (
+              <>
+                <button
+                  className="lightbox-nav prev"
+                  onClick={lightboxPrevImage}
+                  aria-label="Попереднє зображення"
+                >
+                  <ChevronLeft size={32} />
+                </button>
+                <button
+                  className="lightbox-nav next"
+                  onClick={lightboxNextImage}
+                  aria-label="Наступне зображення"
+                >
+                  <ChevronRight size={32} />
+                </button>
+                <div className="lightbox-thumbnails">
+                  {productImages.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`${currentProduct.name} thumbnail ${index + 1}`}
+                      className={`lightbox-thumbnail ${
+                        index === lightboxImageIndex ? "active" : ""
+                      }`}
+                      onClick={() => setLightboxImageIndex(index)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -38,6 +38,21 @@ const productSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		specifications: {
+			type: [
+				{
+					name: {
+						type: String,
+						required: true,
+					},
+					value: {
+						type: String,
+						required: true,
+					},
+				},
+			],
+			default: [],
+		},
 	},
 	{ timestamps: true }
 );
