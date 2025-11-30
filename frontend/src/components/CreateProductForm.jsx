@@ -5,14 +5,14 @@ import { PlusCircle, Upload, Loader } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 
 const categories = [
-  "Смартфони",
-  "Комп’ютери",
-  "Планшети",
-  "Розумні годинники",
-  "Навушники",
-  "Ноутбуки",
-  "Геймінг",
-  "Телевізори",
+  { value: "smartphones", label: "Смартфони" },
+  { value: "computers", label: "Комп'ютери" },
+  { value: "tablets", label: "Планшети" },
+  { value: "smart-watches", label: "Розумні годинники" },
+  { value: "headphone", label: "Навушники" },
+  { value: "laptops", label: "Ноутбуки" },
+  { value: "gaming", label: "Геймінг" },
+  { value: "televisions", label: "Телевізори" },
 ];
 
 const CreateProductForm = () => {
@@ -305,8 +305,8 @@ const CreateProductForm = () => {
           >
             <option value="">Виберіть категорію</option>
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+              <option key={category.value} value={category.value}>
+                {category.label}
               </option>
             ))}
           </select>
