@@ -11,6 +11,7 @@ import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { useUserStore } from "./stores/useUserStore";
 import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
@@ -63,6 +64,9 @@ function App() {
           position: "relative",
           zIndex: 50,
           pt: 20,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
         },
       }}
     >
@@ -74,7 +78,8 @@ function App() {
 
       <div className="app-content">
         <Navbar />
-        <Routes>
+        <Box sx={{ flex: 1 }}>
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route
             path="/signup"
@@ -104,7 +109,9 @@ function App() {
             path="/purchase-cancel"
             element={user ? <PurchaseCancelPage /> : <Navigate to="/login" />}
           />
-        </Routes>
+          </Routes>
+        </Box>
+        <Footer />
       </div>
       <Toaster />
     </Box>
