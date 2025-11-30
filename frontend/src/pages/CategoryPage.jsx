@@ -19,14 +19,13 @@ const CategoryPage = () => {
     <Box
       className="category-page"
       sx={{
-        minHeight: "100vh",
         ".category-container": {
           position: "relative",
           zIndex: 10,
           maxWidth: "1280px",
           mx: "auto",
           px: ["1rem", "1.5rem", "2rem"],
-          py: 5,
+          py: 4,
           ".category-title": {
             textAlign: "center",
             fontSize: ["2.3rem", "3rem"],
