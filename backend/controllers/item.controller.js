@@ -1,28 +1,27 @@
-import cloudinary from "../lib/cloudinary.js";
-import Product from "../models/product.model.js";
+import mediaStorage from "../lib/mediaStorage.js";
+import Item from "../models/item.model.js";
 
-export const getAllProducts = async (req, res) => {
+export const fetchAllItems = async (req, res) => {
   try {
-    const products = await Product.find({}); // find all products
-    res.json({ products });
+    const items = await Item.find({});
+    res.json({ products: items });
   } catch (error) {
-    console.log("Error in getAllProducts controller", error.message);
+    console.log("Error in fetchAllItems controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const getFeaturedProducts = async (req, res) => {
+export const getPromotedItems = async (req, res) => {
   try {
-    const featuredProducts = await Product.find({ isFeatured: true }).lean();
-
-    res.json(featuredProducts || []);
+    const promotedItems = await Item.find({ isFeatured: true }).lean();
+    res.json(promotedItems || []);
   } catch (error) {
-    console.log("Error in getFeaturedProducts controller", error.message);
+    console.log("Error in getPromotedItems controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const createProduct = async (req, res) => {
+export const addNewItem = async (req, res) => {
   try {
     const {
       name,
@@ -34,75 +33,75 @@ export const createProduct = async (req, res) => {
       specifications,
     } = req.body;
 
-    let imageArray = [];
+    let uploadedImages = [];
 
     if (images && Array.isArray(images) && images.length > 0) {
-      const uploadPromises = images.map((img) => {
+      const uploadTasks = images.map((img) => {
         if (img) {
-          return cloudinary.uploader.upload(img, {
+          return mediaStorage.uploader.upload(img, {
             folder: "products",
           });
         }
         return null;
       });
 
-      const cloudinaryResponses = await Promise.all(uploadPromises);
-      imageArray = cloudinaryResponses
+      const uploadResults = await Promise.all(uploadTasks);
+      uploadedImages = uploadResults
         .filter((response) => response && response.secure_url)
         .map((response) => response.secure_url);
     } else if (image) {
-      const cloudinaryResponse = await cloudinary.uploader.upload(image, {
+      const uploadResult = await mediaStorage.uploader.upload(image, {
         folder: "products",
       });
-      if (cloudinaryResponse?.secure_url) {
-        imageArray = [cloudinaryResponse.secure_url];
+      if (uploadResult?.secure_url) {
+        uploadedImages = [uploadResult.secure_url];
       }
     }
 
-    if (imageArray.length === 0) {
+    if (uploadedImages.length === 0) {
       return res
         .status(400)
         .json({ message: "At least one image is required" });
     }
 
-    const product = await Product.create({
+    const newItem = await Item.create({
       name,
       description,
       price,
-      images: imageArray,
-      image: imageArray[0],
+      images: uploadedImages,
+      image: uploadedImages[0],
       category,
       specifications: specifications || [],
     });
 
-    res.status(201).json(product);
+    res.status(201).json(newItem);
   } catch (error) {
-    console.log("Error in createProduct controller", error.message);
+    console.log("Error in addNewItem controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const deleteProduct = async (req, res) => {
+export const removeItem = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const item = await Item.findById(req.params.id);
 
-    if (!product) {
+    if (!item) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const imagesToDelete =
-      product.images && product.images.length > 0
-        ? product.images
-        : product.image
-        ? [product.image]
+    const imagesToRemove =
+      item.images && item.images.length > 0
+        ? item.images
+        : item.image
+        ? [item.image]
         : [];
 
-    if (imagesToDelete.length > 0) {
-      const deletePromises = imagesToDelete.map((imgUrl) => {
+    if (imagesToRemove.length > 0) {
+      const deleteTasks = imagesToRemove.map((imgUrl) => {
         if (imgUrl) {
           try {
             const publicId = imgUrl.split("/").pop().split(".")[0];
-            return cloudinary.uploader.destroy(`products/${publicId}`);
+            return mediaStorage.uploader.destroy(`products/${publicId}`);
           } catch (error) {
             console.log("error deleting image from cloudinary", error);
             return null;
@@ -111,22 +110,22 @@ export const deleteProduct = async (req, res) => {
         return null;
       });
 
-      await Promise.all(deletePromises);
+      await Promise.all(deleteTasks);
       console.log("deleted images from cloudinary");
     }
 
-    await Product.findByIdAndDelete(req.params.id);
+    await Item.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
-    console.log("Error in deleteProduct controller", error.message);
+    console.log("Error in removeItem controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const getRecommendedProducts = async (req, res) => {
+export const getRecommendedItems = async (req, res) => {
   try {
-    const products = await Product.aggregate([
+    const items = await Item.aggregate([
       {
         $sample: { size: 4 },
       },
@@ -136,16 +135,15 @@ export const getRecommendedProducts = async (req, res) => {
           name: 1,
           description: 1,
           images: 1,
-          image: 1, // Зворотна сумісність
+          image: 1,
           price: 1,
         },
       },
     ]);
 
-    res.json(products);
+    res.json(items);
   } catch (error) {
-    console.log("Error in getRecommendedProducts controller", error.message);
-    // Перевірка на помилки підключення
+    console.log("Error in getRecommendedItems controller", error.message);
     if (
       error.message.includes("connection") ||
       error.message.includes("timeout") ||
@@ -161,16 +159,15 @@ export const getRecommendedProducts = async (req, res) => {
   }
 };
 
-export const getProductById = async (req, res) => {
+export const getItemById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json(product);
+    res.json(item);
   } catch (error) {
-    console.log("Error in getProductById controller", error.message);
-    // Перевірка на помилки підключення
+    console.log("Error in getItemById controller", error.message);
     if (
       error.message.includes("connection") ||
       error.message.includes("timeout") ||
@@ -186,29 +183,30 @@ export const getProductById = async (req, res) => {
   }
 };
 
-export const getProductsByCategory = async (req, res) => {
+export const getItemsByCategory = async (req, res) => {
   const { category } = req.params;
   try {
-    const products = await Product.find({ category });
-    res.json({ products });
+    const items = await Item.find({ category });
+    res.json({ products: items });
   } catch (error) {
-    console.log("Error in getProductsByCategory controller", error.message);
+    console.log("Error in getItemsByCategory controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-export const toggleFeaturedProduct = async (req, res) => {
+export const togglePromotedItem = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      product.isFeatured = !product.isFeatured;
-      const updatedProduct = await product.save();
-      res.json(updatedProduct);
+    const item = await Item.findById(req.params.id);
+    if (item) {
+      item.isFeatured = !item.isFeatured;
+      const updatedItem = await item.save();
+      res.json(updatedItem);
     } else {
       res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
-    console.log("Error in toggleFeaturedProduct controller", error.message);
+    console.log("Error in togglePromotedItem controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
