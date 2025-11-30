@@ -5,16 +5,20 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Box } from "theme-ui";
 import ProductCard from "../components/ProductCard";
+import { getCategoryName } from "../utils/categoryNames";
 
 const CategoryPage = () => {
   const { fetchProductsByCategory, products } = useProductStore();
   const { category } = useParams();
 
   useEffect(() => {
-    fetchProductsByCategory(category);
+    if (category) {
+      fetchProductsByCategory(category);
+    }
   }, [fetchProductsByCategory, category]);
 
-  console.log("products:", products);
+  const categoryName = getCategoryName(category);
+
   return (
     <Box
       className="category-page"
@@ -62,7 +66,7 @@ const CategoryPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {category.charAt(0).toUpperCase() + category.slice(1)}
+          {categoryName}
         </motion.h1>
 
         <motion.div
