@@ -60,25 +60,21 @@ const LoginPage = (): JSX.Element => {
                   mb: 2,
                 },
                 ".form-input-wrapper": {
-                  position: "relative",
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
                   ".input-icon": {
-                    position: "absolute",
-                    left: 3,
                     color: "gray400",
-                    zIndex: 1,
+                    flexShrink: 0,
                   },
                   ".form-input": {
-                    width: "100%",
+                    flex: 1,
                     bg: "gray700",
                     border: "1px solid",
                     borderColor: "gray600",
                     borderRadius: "md",
                     py: 2,
-                    pl: 10,
-                    pr: 3,
+                    px: 3,
                     color: "white",
                     fontSize: "0.875rem",
                     "&:focus": {
@@ -117,7 +113,7 @@ const LoginPage = (): JSX.Element => {
               },
             },
             ".login-footer": {
-              mt: 6,
+              mt: 4,
               textAlign: "center",
               ".footer-text": {
                 fontSize: "0.875rem",
@@ -195,11 +191,7 @@ const LoginPage = (): JSX.Element => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="submit-button"
-              disabled={loading}
-            >
+            <button type="submit" className="submit-button" disabled={loading}>
               {loading ? (
                 <>
                   <Loader className="spinning" size={18} />
@@ -229,4 +221,3 @@ const LoginPage = (): JSX.Element => {
 };
 
 export default LoginPage;
-
