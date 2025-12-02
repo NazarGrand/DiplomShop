@@ -36,6 +36,7 @@ export interface Category {
   href: string;
   name: string;
   imageUrl: string;
+  hoverImageUrl?: string;
 }
 
 export interface CategoryOption {

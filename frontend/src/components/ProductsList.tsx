@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { Trash, Star } from "lucide-react";
+import { Trash, Award } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 
 const ProductsList = (): JSX.Element => {
@@ -175,7 +175,7 @@ const ProductsList = (): JSX.Element => {
                       product.isFeatured && "featured"
                     )}
                   >
-                    <Star className="star-icon" />
+                    <Award className="star-icon" />
                   </button>
                 </td>
                 <td className="table-cell">

@@ -10,7 +10,9 @@ interface FeaturedProductsProps {
   featuredProducts: Product[];
 }
 
-const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps): JSX.Element => {
+const FeaturedProducts = ({
+  featuredProducts,
+}: FeaturedProductsProps): JSX.Element => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(4);
 
@@ -54,7 +56,8 @@ const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps): JSX.Elem
             fontSize: ["3rem", "3.75rem"],
             fontWeight: 900,
             color: "emerald400",
-            mb: 6,
+            m: 0,
+            mb: 3,
             fontFamily: "oswald",
             letterSpacing: "1px",
             "-webkit-text-stroke": "1.9px #2a3a46",
@@ -160,9 +163,15 @@ const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps): JSX.Elem
             <div
               className="carousel-track"
               style={{
-                transform: `translateX(-${(currentIndex / itemsPerPage) * 100}%)`,
+                transform: `translateX(-${
+                  (currentIndex / itemsPerPage) * 100
+                }%)`,
                 display: "grid",
-                gridTemplateColumns: `repeat(${featuredProducts.length}, calc((100% - ${(itemsPerPage - 1) * 16}px) / ${itemsPerPage}))`,
+                gridTemplateColumns: `repeat(${
+                  featuredProducts.length
+                }, calc((100% - ${
+                  (itemsPerPage - 1) * 16
+                }px) / ${itemsPerPage}))`,
               }}
             >
               {featuredProducts.map((product) => {
@@ -182,7 +191,9 @@ const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps): JSX.Elem
                         />
                       </div>
                       <h3 className="product-name">{product.name}</h3>
-                      <p className="product-price">${product.price.toFixed(2)}</p>
+                      <p className="product-price">
+                        ${product.price.toFixed(2)}
+                      </p>
                       <button
                         className="add-to-cart-button"
                         onClick={() => addToCart(product)}
@@ -223,4 +234,3 @@ const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps): JSX.Elem
 };
 
 export default FeaturedProducts;
-

@@ -10,18 +10,54 @@ import { Shield, Truck, Headphones, TrendingUp, Award } from "lucide-react";
 import { Category } from "../types";
 
 const categories: Category[] = [
-  { href: "/smartphones", name: "Смартфони", imageUrl: "/smartphones.jpg" },
-  { href: "/computers", name: "Комп'ютери", imageUrl: "/computers.jpg" },
-  { href: "/tablets", name: "Планшети", imageUrl: "/tablets.jpg" },
+  {
+    href: "/smartphones",
+    name: "Смартфони",
+    imageUrl: "/smartphones.jpg",
+    hoverImageUrl: "/smartphones-hover.jpg",
+  },
+  {
+    href: "/computers",
+    name: "Комп'ютери",
+    imageUrl: "/computers.jpg",
+    hoverImageUrl: "/computers-hover.jpg",
+  },
+  {
+    href: "/tablets",
+    name: "Планшети",
+    imageUrl: "/tablets.jpg",
+    hoverImageUrl: "/tablets-hover.jpg",
+  },
   {
     href: "/smart-watches",
     name: "Розумні годинники",
     imageUrl: "/smart-watches.jpg",
+    hoverImageUrl: "/smart-watches-hover.jpg",
   },
-  { href: "/headphone", name: "Навушники", imageUrl: "/headphone.jpg" },
-  { href: "/laptops", name: "Ноутбуки", imageUrl: "/laptops.jpg" },
-  { href: "/gaming", name: "Геймінг", imageUrl: "/gaming.jpg" },
-  { href: "/televisions", name: "Телевізори", imageUrl: "/televisions.jpg" },
+  {
+    href: "/headphone",
+    name: "Навушники",
+    imageUrl: "/headphone.jpg",
+    hoverImageUrl: "/headphone-hover.jpg",
+  },
+  {
+    href: "/laptops",
+    name: "Ноутбуки",
+    imageUrl: "/laptops.jpg",
+    hoverImageUrl: "/laptops-hover.jpg",
+  },
+  {
+    href: "/gaming",
+    name: "Геймінг",
+    imageUrl: "/gaming.jpg",
+    hoverImageUrl: "/gaming-hover.jpg",
+  },
+  {
+    href: "/televisions",
+    name: "Телевізори",
+    imageUrl: "/televisions.jpg",
+    hoverImageUrl: "/televisions-hover.jpg",
+  },
 ];
 
 interface Benefit {
@@ -319,4 +355,3 @@ const HomePage = (): JSX.Element => {
 };
 
 export default HomePage;
-

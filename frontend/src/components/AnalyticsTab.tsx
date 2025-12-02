@@ -1,6 +1,7 @@
 /** @jsxImportSource theme-ui */
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Box } from "theme-ui";
 import axios from "../lib/axios";
 import { Users, Package, ShoppingCart, DollarSign } from "lucide-react";
 import {
@@ -22,7 +23,7 @@ interface AnalyticsData {
 }
 
 interface DailySalesData {
-  name: string;
+  date: string;
   sales: number;
   revenue: number;
 }
@@ -51,10 +52,27 @@ const AnalyticsTab = (): JSX.Element => {
           analyticsData: AnalyticsData;
           dailySalesData: DailySalesData[];
         }>("/analytics");
-        setAnalyticsData(response.data.analyticsData);
-        setDailySalesData(response.data.dailySalesData);
-      } catch (error) {
+        console.log("Analytics response:", response.data);
+        if (response.data) {
+          setAnalyticsData(response.data.analyticsData || {
+            users: 0,
+            products: 0,
+            totalSales: 0,
+            totalRevenue: 0,
+          });
+          setDailySalesData(response.data.dailySalesData || []);
+        }
+      } catch (error: any) {
         console.error("Error fetching analytics data:", error);
+        console.error("Error response:", error.response?.data);
+        // Встановлюємо значення за замовчуванням при помилці
+        setAnalyticsData({
+          users: 0,
+          products: 0,
+          totalSales: 0,
+          totalRevenue: 0,
+        });
+        setDailySalesData([]);
       } finally {
         setIsLoading(false);
       }
@@ -64,15 +82,29 @@ const AnalyticsTab = (): JSX.Element => {
   }, []);
 
   if (isLoading) {
-    return <div>Завантаження...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "400px",
+          color: "gray300",
+          fontSize: "1.125rem",
+        }}
+      >
+        Завантаження...
+      </Box>
+    );
   }
 
   return (
-    <div
+    <Box
       className="analytics-tab"
       sx={{
         maxWidth: "1280px",
         mx: "auto",
+        px: [2, 4],
         ".analytics-cards": {
           display: "grid",
           gridTemplateColumns: ["1fr", "repeat(2, 1fr)", "repeat(4, 1fr)"],
@@ -80,10 +112,17 @@ const AnalyticsTab = (): JSX.Element => {
           mb: 5,
         },
         ".analytics-chart": {
-          bg: "rgba(31, 41, 55, 0.6)",
+          bg: "gray800",
           borderRadius: "lg",
           p: 6,
           boxShadow: "medium",
+          minHeight: "400px",
+        },
+        ".empty-message": {
+          textAlign: "center",
+          color: "gray400",
+          fontSize: "1.125rem",
+          py: 8,
         },
       }}
     >
@@ -119,34 +158,56 @@ const AnalyticsTab = (): JSX.Element => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25 }}
       >
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={dailySalesData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" stroke="#D1D5DB" />
-            <YAxis yAxisId="left" stroke="#D1D5DB" />
-            <YAxis yAxisId="right" orientation="right" stroke="#D1D5DB" />
-            <Tooltip />
-            <Legend />
-            <Line
-              yAxisId="left"
-              type="monotone"
-              dataKey="sales"
-              stroke="#10B981"
-              activeDot={{ r: 8 }}
-              name="Продажі"
-            />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="revenue"
-              stroke="#3B82F6"
-              activeDot={{ r: 8 }}
-              name="Дохід"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {dailySalesData && dailySalesData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={dailySalesData.map(item => ({ name: item.date, sales: item.sales, revenue: item.revenue }))}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <XAxis dataKey="name" stroke="#D1D5DB" />
+              <YAxis 
+                yAxisId="left" 
+                stroke="#D1D5DB" 
+                domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]}
+              />
+              <YAxis 
+                yAxisId="right" 
+                orientation="right" 
+                stroke="#D1D5DB"
+                domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: "#1F2937", 
+                  border: "1px solid #374151",
+                  borderRadius: "8px",
+                  color: "#D1D5DB"
+                }} 
+              />
+              <Legend wrapperStyle={{ color: "#D1D5DB" }} />
+              <Line
+                yAxisId="left"
+                type="monotone"
+                dataKey="sales"
+                stroke="#10B981"
+                activeDot={{ r: 8 }}
+                name="Продажі"
+              />
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="revenue"
+                stroke="#3B82F6"
+                activeDot={{ r: 8 }}
+                name="Дохід ($)"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="empty-message">
+            Немає даних про продажі за останні 7 днів
+          </div>
+        )}
       </motion.div>
-    </div>
+    </Box>
   );
 };
 
