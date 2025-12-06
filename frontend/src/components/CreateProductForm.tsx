@@ -313,6 +313,7 @@ const CreateProductForm = ({
             width: "100%",
             display: "flex",
             justifyContent: "center",
+            alignItems: "center",
             py: 2,
             px: 4,
             border: "1px solid",

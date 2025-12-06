@@ -77,14 +77,25 @@ export const useUserStore = create<UserStore>((set, get) => ({
 	},
 
 	refreshToken: async () => {
-		if (get().checkingAuth) return;
+		if (get().checkingAuth) {
+			// Wait for current auth check to complete
+			return new Promise((resolve) => {
+				const checkInterval = setInterval(() => {
+					if (!get().checkingAuth) {
+						clearInterval(checkInterval);
+						resolve(null);
+					}
+				}, 100);
+			});
+		}
 
 		set({ checkingAuth: true });
 		try {
-			const response = await axios.post("/auth/refresh-token");
+			const response = await axios.get("/auth/refresh");
 			set({ checkingAuth: false });
 			return response.data;
-		} catch (error) {
+		} catch (error: any) {
+			console.error("Refresh token error:", error.response?.data || error.message);
 			set({ user: null, checkingAuth: false });
 			throw error;
 		}
@@ -95,7 +106,12 @@ axios.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
-		if (error.response?.status === 401 && !originalRequest._retry) {
+		
+		// Skip refresh for auth endpoints to avoid infinite loops
+		if (error.response?.status === 401 && !originalRequest._retry && 
+		    !originalRequest.url?.includes("/auth/refresh") &&
+		    !originalRequest.url?.includes("/auth/login") &&
+		    !originalRequest.url?.includes("/auth/signup")) {
 			originalRequest._retry = true;
 
 			try {
@@ -109,7 +125,9 @@ axios.interceptors.response.use(
 				refreshPromise = null;
 
 				return axios(originalRequest);
-			} catch (refreshError) {
+			} catch (refreshError: any) {
+				console.error("Refresh token failed:", refreshError.response?.data || refreshError.message);
+				refreshPromise = null;
 				useUserStore.getState().logout();
 				return Promise.reject(refreshError);
 			}

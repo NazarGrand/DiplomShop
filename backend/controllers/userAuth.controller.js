@@ -125,7 +125,16 @@ export const renewAccessToken = async (req, res) => {
       return res.status(401).json({ message: "No refresh token provided" });
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    } catch (jwtError) {
+      console.log("JWT verification error:", jwtError.message);
+      if (jwtError.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Refresh token expired" });
+      }
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
 
     const storedToken = await SessionToken.findOne({
       userId: decoded.userId,
