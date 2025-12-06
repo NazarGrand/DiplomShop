@@ -5,27 +5,27 @@ import Order from "../models/order.model.js";
 
 dotenv.config();
 
-// Старий курс: 1 USD = 37 UAH
+// Old exchange rate: 1 USD = 37 UAH
 const OLD_EXCHANGE_RATE = 37;
-// Новий курс: 1 USD = 42 UAH
+// New exchange rate: 1 USD = 42 UAH
 const NEW_EXCHANGE_RATE = 42;
 
 const reconvertPrices = async () => {
 	try {
-		// Підключення до MongoDB
+		// Connect to MongoDB
 		await mongoose.connect(process.env.MONGO_URI, {
 			serverSelectionTimeoutMS: 10000,
 			socketTimeoutMS: 45000,
 		});
 		console.log("✅ Підключено до MongoDB");
 
-		// Переконвертація цін в товарах
+		// Reconvert prices in products
 		const items = await Item.find({});
 		console.log(`\n📦 Знайдено ${items.length} товарів`);
 
 		let updatedItems = 0;
 		for (const item of items) {
-			// Конвертуємо зі старих гривень назад в долари, потім в нові гривні
+			// Convert from old hryvnias back to dollars, then to new hryvnias
 			const priceInUSD = item.price / OLD_EXCHANGE_RATE;
 			const newPrice = Math.round(priceInUSD * NEW_EXCHANGE_RATE * 100) / 100;
 			
@@ -34,7 +34,7 @@ const reconvertPrices = async () => {
 			updatedItems++;
 		}
 
-		// Переконвертація цін в замовленнях
+		// Reconvert prices in orders
 		const orders = await Order.find({});
 		console.log(`\n📋 Знайдено ${orders.length} замовлень`);
 
@@ -86,6 +86,6 @@ const reconvertPrices = async () => {
 	}
 };
 
-// Запуск переконвертації
+// Run reconversion
 reconvertPrices();
 

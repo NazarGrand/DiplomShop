@@ -136,7 +136,7 @@ export const getRecommendedProducts = async (req, res) => {
           name: 1,
           description: 1,
           images: 1,
-          image: 1, // Зворотна сумісність
+          image: 1, // Backward compatibility
           price: 1,
         },
       },
@@ -145,7 +145,7 @@ export const getRecommendedProducts = async (req, res) => {
     res.json(products);
   } catch (error) {
     console.log("Error in getRecommendedProducts controller", error.message);
-    // Перевірка на помилки підключення
+    // Check for connection errors
     if (
       error.message.includes("connection") ||
       error.message.includes("timeout") ||
@@ -170,7 +170,7 @@ export const getProductById = async (req, res) => {
     res.json(product);
   } catch (error) {
     console.log("Error in getProductById controller", error.message);
-    // Перевірка на помилки підключення
+    // Check for connection errors
     if (
       error.message.includes("connection") ||
       error.message.includes("timeout") ||

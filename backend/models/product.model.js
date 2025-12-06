@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema(
 				message: "At least one image is required",
 			},
 		},
-		// Залишаємо для зворотної сумісності (deprecated)
+		// Kept for backward compatibility (deprecated)
 		image: {
 			type: String,
 			required: false,

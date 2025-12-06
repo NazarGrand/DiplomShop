@@ -9,7 +9,7 @@ export const protectRoute = async (req, res, next) => {
 			return res.status(401).json({ message: "Unauthorized - No access token provided" });
 		}
 
-		// Перевірка стану підключення до MongoDB
+		// Check MongoDB connection state
 		const mongoose = (await import("mongoose")).default;
 		if (mongoose.connection.readyState !== 1) {
 			console.log("Error in protectRoute middleware: MongoDB not connected");
@@ -34,7 +34,7 @@ export const protectRoute = async (req, res, next) => {
 			if (error.name === "TokenExpiredError") {
 				return res.status(401).json({ message: "Unauthorized - Access token expired" });
 			}
-			// Якщо помилка пов'язана з MongoDB
+			// If error is related to MongoDB
 			if (error.message.includes("connection") || error.message.includes("timeout") || error.message.includes("ETIMEDOUT")) {
 				console.log("Error in protectRoute middleware: MongoDB connection error", error.message);
 				return res.status(503).json({ 

@@ -65,7 +65,7 @@ const AnalyticsTab = (): JSX.Element => {
       } catch (error: any) {
         console.error("Error fetching analytics data:", error);
         console.error("Error response:", error.response?.data);
-        // Встановлюємо значення за замовчуванням при помилці
+        // Set default values on error
         setAnalyticsData({
           users: 0,
           products: 0,

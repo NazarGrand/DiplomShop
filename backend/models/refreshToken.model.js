@@ -16,7 +16,7 @@ const refreshTokenSchema = new mongoose.Schema(
 		expiresAt: {
 			type: Date,
 			required: true,
-			index: { expireAfterSeconds: 0 }, // Автоматично видаляє документ після expiresAt
+			index: { expireAfterSeconds: 0 }, // Automatically deletes document after expiresAt
 		},
 	},
 	{
@@ -24,7 +24,7 @@ const refreshTokenSchema = new mongoose.Schema(
 	}
 );
 
-// Індекс для швидкого пошуку по userId та token
+// Index for fast search by userId and token
 refreshTokenSchema.index({ userId: 1, token: 1 });
 
 const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);

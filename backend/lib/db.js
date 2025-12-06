@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 export const connectDB = async () => {
 	try {
 		const conn = await mongoose.connect(process.env.MONGO_URI, {
-			serverSelectionTimeoutMS: 10000, // 10 секунд таймаут
-			socketTimeoutMS: 45000, // 45 секунд таймаут для сокетів
+			serverSelectionTimeoutMS: 10000, // 10 seconds timeout
+			socketTimeoutMS: 45000, // 45 seconds timeout for sockets
 		});
 		console.log(`MongoDB connected: ${conn.connection.host}`);
 		
-		// Обробка подій підключення
+		// Handle connection events
 		mongoose.connection.on("error", (err) => {
 			console.log("MongoDB connection error:", err.message);
 		});

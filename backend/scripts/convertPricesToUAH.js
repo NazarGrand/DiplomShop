@@ -5,34 +5,34 @@ import Order from "../models/order.model.js";
 
 dotenv.config();
 
-// Курс конвертації: 1 USD = 42 UAH (можна змінити)
+// Exchange rate: 1 USD = 42 UAH (can be changed)
 const EXCHANGE_RATE = 42;
 
 const convertPrices = async () => {
 	try {
-		// Підключення до MongoDB
+		// Connect to MongoDB
 		await mongoose.connect(process.env.MONGO_URI, {
 			serverSelectionTimeoutMS: 10000,
 			socketTimeoutMS: 45000,
 		});
 		console.log("✅ Підключено до MongoDB");
 
-		// Конвертація цін в товарах
-		// Item використовує модель "Product" в MongoDB, тому вона покриває всі товари
+		// Convert prices in products
+		// Item uses "Product" model in MongoDB, so it covers all products
 		const items = await Item.find({});
 		console.log(`\n📦 Знайдено ${items.length} товарів`);
 
 		let updatedItems = 0;
 		for (const item of items) {
 			const oldPrice = item.price;
-			const newPrice = Math.round(oldPrice * EXCHANGE_RATE * 100) / 100; // Округлення до 2 знаків
+			const newPrice = Math.round(oldPrice * EXCHANGE_RATE * 100) / 100; // Round to 2 decimal places
 			
 			await Item.updateOne({ _id: item._id }, { $set: { price: newPrice } });
 			console.log(`  ✓ ${item.name}: ${oldPrice} USD → ${newPrice} UAH`);
 			updatedItems++;
 		}
 
-		// Конвертація цін в замовленнях
+		// Convert prices in orders
 		const orders = await Order.find({});
 		console.log(`\n📋 Знайдено ${orders.length} замовлень`);
 
@@ -84,6 +84,6 @@ const convertPrices = async () => {
 	}
 };
 
-// Запуск міграції
+// Run migration
 convertPrices();
 
