@@ -9,6 +9,7 @@ import AnalyticsTab from "../components/AnalyticsTab";
 import CreateProductForm from "../components/CreateProductForm";
 import ProductsList from "../components/ProductsList";
 import { useProductStore } from "../stores/useProductStore";
+import { Product } from "../types";
 
 interface Tab {
   id: string;
@@ -26,7 +27,8 @@ type TabId = "create" | "products" | "analytics";
 
 const AdminPage = (): JSX.Element => {
   const [activeTab, setActiveTab] = useState<TabId>("create");
-  const { fetchAllProducts } = useProductStore();
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const { fetchAllProducts, products } = useProductStore();
 
   useEffect(() => {
     fetchAllProducts();
@@ -117,8 +119,37 @@ const AdminPage = (): JSX.Element => {
             );
           })}
         </div>
-        {activeTab === "create" && <CreateProductForm />}
-        {activeTab === "products" && <ProductsList />}
+        {activeTab === "create" && (
+          <CreateProductForm
+            editingProduct={editingProduct}
+            onCancelEdit={() => setEditingProduct(null)}
+          />
+        )}
+        {activeTab === "products" && (
+          <ProductsList
+            onEdit={async (productId: string) => {
+              const product = products.find((p) => p._id === productId);
+              if (product) {
+                // Fetch full product data to ensure we have all images
+                try {
+                  await fetchProductById(productId);
+                  const fullProduct = useProductStore.getState().currentProduct;
+                  if (fullProduct) {
+                    console.log("Full product data loaded:", fullProduct);
+                    setEditingProduct(fullProduct);
+                  } else {
+                    console.log("Using product from list:", product);
+                    setEditingProduct(product);
+                  }
+                } catch (error) {
+                  console.error("Error fetching full product:", error);
+                  setEditingProduct(product);
+                }
+                setActiveTab("create");
+              }
+            }}
+          />
+        )}
         {activeTab === "analytics" && <AnalyticsTab />}
       </div>
     </Box>

@@ -1,10 +1,14 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { Trash, Award } from "lucide-react";
+import { Trash, Award, Edit } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 
-const ProductsList = (): JSX.Element => {
+interface ProductsListProps {
+  onEdit?: (productId: string) => void;
+}
+
+const ProductsList = ({ onEdit }: ProductsListProps): JSX.Element => {
   const { deleteProduct, toggleFeaturedProduct, products } = useProductStore();
 
   console.log("products", products);
@@ -102,6 +106,22 @@ const ProductsList = (): JSX.Element => {
                     width: "20px",
                   },
                 },
+                ".edit-button": {
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "#3B82F6",
+                  cursor: "pointer",
+                  border: "none",
+                  bg: "transparent",
+                  mr: 2,
+                  "&:hover": {
+                    color: "#60A5FA",
+                  },
+                  ".edit-icon": {
+                    height: "20px",
+                    width: "20px",
+                  },
+                },
                 ".delete-button": {
                   fontSize: "0.875rem",
                   fontWeight: 500,
@@ -179,12 +199,24 @@ const ProductsList = (): JSX.Element => {
                   </button>
                 </td>
                 <td className="table-cell">
-                  <button
-                    onClick={() => deleteProduct(product._id)}
-                    className="delete-button"
-                  >
-                    <Trash className="trash-icon" />
-                  </button>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {onEdit && (
+                      <button
+                        onClick={() => onEdit(product._id)}
+                        className="edit-button"
+                        title="Редагувати"
+                      >
+                        <Edit className="edit-icon" />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => deleteProduct(product._id)}
+                      className="delete-button"
+                      title="Видалити"
+                    >
+                      <Trash className="trash-icon" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             );

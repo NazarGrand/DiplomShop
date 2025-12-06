@@ -14,6 +14,7 @@ interface ProductStore {
 	fetchAllProducts: () => Promise<void>;
 	fetchProductsByCategory: (category: string) => Promise<void>;
 	deleteProduct: (productId: string) => Promise<void>;
+	updateProduct: (productId: string, productData: Partial<Product>) => Promise<void>;
 	toggleFeaturedProduct: (productId: string) => Promise<void>;
 	fetchFeaturedProducts: () => Promise<void>;
 }
@@ -82,6 +83,22 @@ export const useProductStore = create<ProductStore>((set, get) => ({
 		} catch (error: any) {
 			set({ loading: false });
 			toast.error(error.response?.data?.error || "Не вдалося видалити товар");
+		}
+	},
+	updateProduct: async (productId: string, productData: Partial<Product>) => {
+		set({ loading: true });
+		try {
+			const res = await axios.put<Product>(`/products/${productId}`, productData);
+			set((prevState) => ({
+				products: prevState.products.map((product) =>
+					product._id === productId ? res.data : product
+				),
+				loading: false,
+			}));
+			toast.success("Товар успішно оновлено");
+		} catch (error: any) {
+			set({ loading: false });
+			toast.error(error.response?.data?.error || "Не вдалося оновити товар");
 		}
 	},
 	toggleFeaturedProduct: async (productId: string) => {

@@ -1,9 +1,9 @@
 /** @jsxImportSource theme-ui */
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { PlusCircle, Upload, Loader, X } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
-import { CategoryOption, Specification } from "../types";
+import { CategoryOption, Specification, Product } from "../types";
 
 const categories: CategoryOption[] = [
   { value: "smartphones", label: "Смартфони" },
@@ -25,7 +25,15 @@ interface ProductFormData {
   specifications: Specification[];
 }
 
-const CreateProductForm = (): JSX.Element => {
+interface CreateProductFormProps {
+  editingProduct?: Product | null;
+  onCancelEdit?: () => void;
+}
+
+const CreateProductForm = ({
+  editingProduct,
+  onCancelEdit,
+}: CreateProductFormProps): JSX.Element => {
   const [newProduct, setNewProduct] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -34,14 +42,68 @@ const CreateProductForm = (): JSX.Element => {
     images: [],
     specifications: [],
   });
-  const [specInput, setSpecInput] = useState<Specification>({ name: "", value: "" });
+  const [specInput, setSpecInput] = useState<Specification>({
+    name: "",
+    value: "",
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { createProduct, loading } = useProductStore();
+  const { createProduct, updateProduct, loading, fetchAllProducts } =
+    useProductStore();
+
+  useEffect(() => {
+    if (editingProduct) {
+      console.log("Editing product:", editingProduct);
+      console.log("Product images:", editingProduct.images);
+      console.log("Product image:", editingProduct.image);
+
+      const productImages =
+        editingProduct.images && editingProduct.images.length > 0
+          ? editingProduct.images
+          : editingProduct.image
+          ? [editingProduct.image]
+          : [];
+
+      console.log("Final images array:", productImages);
+
+      setNewProduct({
+        name: editingProduct.name || "",
+        description: editingProduct.description || "",
+        price: editingProduct.price?.toString() || "",
+        category: editingProduct.category || "",
+        images: productImages,
+        specifications: editingProduct.specifications || [],
+      });
+    } else {
+      setNewProduct({
+        name: "",
+        description: "",
+        price: "",
+        category: "",
+        images: [],
+        specifications: [],
+      });
+      setSpecInput({ name: "", value: "" });
+    }
+  }, [editingProduct]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
-      await createProduct(newProduct);
+      const productData = {
+        ...newProduct,
+        price: parseFloat(newProduct.price) || 0,
+      };
+
+      if (editingProduct) {
+        await updateProduct(editingProduct._id, productData);
+        await fetchAllProducts();
+        if (onCancelEdit) {
+          onCancelEdit();
+        }
+      } else {
+        await createProduct(productData);
+      }
       setNewProduct({
         name: "",
         description: "",
@@ -52,12 +114,13 @@ const CreateProductForm = (): JSX.Element => {
       });
       setSpecInput({ name: "", value: "" });
     } catch {
-      console.log("error creating a product");
+      console.log("error creating/updating a product");
     }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(e.target.files || []);
+    console.log("Files selected:", files.length);
     if (files.length > 0) {
       const readers = files.map((file) => {
         return new Promise<string>((resolve) => {
@@ -200,17 +263,8 @@ const CreateProductForm = (): JSX.Element => {
               mt: 1,
               display: "flex",
               alignItems: "center",
-              ".file-input": {
-                position: "absolute",
-                width: "1px",
-                height: "1px",
-                padding: 0,
-                margin: "-1px",
-                overflow: "hidden",
-                clip: "rect(0, 0, 0, 0)",
-                whiteSpace: "nowrap",
-                borderWidth: 0,
-              },
+              gap: 2,
+              position: "relative",
               ".file-label": {
                 cursor: "pointer",
                 bg: "gray700",
@@ -226,12 +280,20 @@ const CreateProductForm = (): JSX.Element => {
                 color: "gray300",
                 display: "inline-flex",
                 alignItems: "center",
+                userSelect: "none",
+                transition: "all 0.2s ease",
+                fontFamily: "inherit",
+                position: "relative",
+                zIndex: 1,
                 "&:hover": {
                   bg: "gray600",
                 },
                 "&:focus": {
                   outline: "none",
                   boxShadow: "0 0 0 2px rgba(16, 185, 129, 0.5)",
+                },
+                "&:active": {
+                  transform: "scale(0.98)",
                 },
                 ".upload-icon": {
                   height: "20px",
@@ -282,7 +344,32 @@ const CreateProductForm = (): JSX.Element => {
         },
       }}
     >
-      <h2 className="form-title">Створити новий товар</h2>
+      <h2 className="form-title">
+        {editingProduct ? "Редагувати товар" : "Створити новий товар"}
+      </h2>
+      {editingProduct && onCancelEdit && (
+        <button
+          type="button"
+          onClick={onCancelEdit}
+          sx={{
+            mb: 3,
+            px: 3,
+            py: 2,
+            bg: "gray700",
+            color: "gray300",
+            border: "1px solid",
+            borderColor: "gray600",
+            borderRadius: "md",
+            cursor: "pointer",
+            fontSize: "0.875rem",
+            "&:hover": {
+              bg: "gray600",
+            },
+          }}
+        >
+          Скасувати редагування
+        </button>
+      )}
 
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
@@ -364,23 +451,34 @@ const CreateProductForm = (): JSX.Element => {
           <label className="form-label">Зображення товару</label>
           <div className="file-upload-wrapper">
             <input
+              ref={fileInputRef}
               type="file"
               id="images"
-              className="file-input"
               accept="image/*"
               multiple
               onChange={handleImageChange}
+              style={{ display: "none" }}
             />
             <label htmlFor="images" className="file-label">
               <Upload className="upload-icon" />
-              Завантажити зображення (можна вибрати кілька)
+              {editingProduct
+                ? "Додати нові зображення (можна вибрати кілька)"
+                : "Завантажити зображення (можна вибрати кілька)"}
             </label>
             {newProduct.images.length > 0 && (
               <span className="upload-status">
-                Завантажено: {newProduct.images.length}
+                Всього зображень: {newProduct.images.length}
               </span>
             )}
           </div>
+          {(() => {
+            console.log(
+              "Rendering images section. Images count:",
+              newProduct.images.length
+            );
+            console.log("Images array:", newProduct.images);
+            return null;
+          })()}
           {newProduct.images.length > 0 && (
             <div
               sx={{
@@ -423,26 +521,54 @@ const CreateProductForm = (): JSX.Element => {
                       bg: "rgba(220, 38, 38, 0.9)",
                     },
                   },
+                  ".image-badge": {
+                    position: "absolute",
+                    top: 1,
+                    left: 1,
+                    px: 2,
+                    py: 1,
+                    borderRadius: "md",
+                    fontSize: "0.75rem",
+                    fontWeight: 500,
+                    bg: "rgba(0, 0, 0, 0.7)",
+                    color: "white",
+                  },
                 },
               }}
             >
-              {newProduct.images.map((img, index) => (
-                <div key={index} className="image-preview">
-                  <img
-                    src={img}
-                    alt={`Preview ${index + 1}`}
-                    className="preview-image"
-                  />
-                  <button
-                    type="button"
-                    className="remove-button"
-                    onClick={() => removeImage(index)}
-                    aria-label="Видалити зображення"
+              {newProduct.images.map((img, index) => {
+                const isExisting = img.startsWith("http");
+                return (
+                  <div
+                    key={`${isExisting ? "existing" : "new"}-${index}`}
+                    className="image-preview"
                   >
-                    <X size={16} />
-                  </button>
-                </div>
-              ))}
+                    <img
+                      src={img}
+                      alt={`Preview ${index + 1}`}
+                      className="preview-image"
+                    />
+                    {isExisting && <span className="image-badge">Існуюче</span>}
+                    {!isExisting && (
+                      <span
+                        className="image-badge"
+                        sx={{ bg: "rgba(16, 185, 129, 0.9)" }}
+                      >
+                        Нове
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      className="remove-button"
+                      onClick={() => removeImage(index)}
+                      aria-label="Видалити зображення"
+                      title="Видалити зображення"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -575,7 +701,7 @@ const CreateProductForm = (): JSX.Element => {
           ) : (
             <>
               <PlusCircle className="button-icon" />
-              Створити товар
+              {editingProduct ? "Оновити товар" : "Створити товар"}
             </>
           )}
         </button>
@@ -585,4 +711,3 @@ const CreateProductForm = (): JSX.Element => {
 };
 
 export default CreateProductForm;
-

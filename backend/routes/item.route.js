@@ -8,6 +8,7 @@ import {
   getItemById,
   getItemsByCategory,
   togglePromotedItem,
+  updateItem,
 } from "../controllers/item.controller.js";
 import { verifyAuthentication, requireAdminAccess } from "../middleware/authentication.middleware.js";
 
@@ -19,6 +20,7 @@ router.get("/category/:category", getItemsByCategory);
 router.get("/recommendations", getRecommendedItems);
 router.get("/:id", getItemById);
 router.post("/", verifyAuthentication, requireAdminAccess, addNewItem);
+router.put("/:id", verifyAuthentication, requireAdminAccess, updateItem);
 router.patch("/:id", verifyAuthentication, requireAdminAccess, togglePromotedItem);
 router.delete("/:id", verifyAuthentication, requireAdminAccess, removeItem);
 

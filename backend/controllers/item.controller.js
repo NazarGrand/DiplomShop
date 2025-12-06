@@ -210,3 +210,79 @@ export const togglePromotedItem = async (req, res) => {
   }
 };
 
+export const updateItem = async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      images,
+      image,
+      category,
+      specifications,
+    } = req.body;
+
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    let uploadedImages = item.images || (item.image ? [item.image] : []);
+
+    // Handle new images if provided
+    if (images && Array.isArray(images) && images.length > 0) {
+      const newImages = images.filter((img) => img && !img.startsWith("http"));
+      const existingImages = images.filter((img) => img && img.startsWith("http"));
+
+      if (newImages.length > 0) {
+        const uploadTasks = newImages.map((img) => {
+          if (img) {
+            return mediaStorage.uploader.upload(img, {
+              folder: "products",
+            });
+          }
+          return null;
+        });
+
+        const uploadResults = await Promise.all(uploadTasks);
+        const newUploadedImages = uploadResults
+          .filter((response) => response && response.secure_url)
+          .map((response) => response.secure_url);
+
+        uploadedImages = [...existingImages, ...newUploadedImages];
+      } else {
+        uploadedImages = existingImages;
+      }
+    } else if (image && !image.startsWith("http")) {
+      const uploadResult = await mediaStorage.uploader.upload(image, {
+        folder: "products",
+      });
+      if (uploadResult?.secure_url) {
+        uploadedImages = [uploadResult.secure_url];
+      }
+    }
+
+    if (uploadedImages.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "At least one image is required" });
+    }
+
+    // Update item
+    item.name = name || item.name;
+    item.description = description || item.description;
+    item.price = price !== undefined ? price : item.price;
+    item.images = uploadedImages;
+    item.image = uploadedImages[0];
+    item.category = category || item.category;
+    item.specifications = specifications || item.specifications || [];
+
+    const updatedItem = await item.save();
+
+    res.json(updatedItem);
+  } catch (error) {
+    console.log("Error in updateItem controller", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
