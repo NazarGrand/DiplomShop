@@ -157,7 +157,7 @@ const CartItem = ({ item }: CartItemProps): JSX.Element => {
             </button>
           </div>
           <div className="cart-item-price">
-            <p className="price-value">${item.price}</p>
+            <p className="price-value">{Math.round(item.price)} ₴</p>
           </div>
           <button
             className="cart-item-remove"

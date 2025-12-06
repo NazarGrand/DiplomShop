@@ -336,7 +336,7 @@ const HomePage = (): JSX.Element => {
           <div className="promo-content">
             <h2 className="promo-title">Спеціальна пропозиція!</h2>
             <p className="promo-text">
-              Безкоштовна доставка при замовленні від $1000. Швидко, надійно та
+              Безкоштовна доставка при замовленні від 1000 грн. Швидко, надійно та
               зручно. Оформіть замовлення вже сьогодні!
             </p>
             <Link to="/category/smartphones" className="promo-button">

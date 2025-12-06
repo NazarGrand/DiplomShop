@@ -149,7 +149,7 @@ const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
         </Link>
         <div className="product-price-wrapper">
           <p>
-            <span className="product-price">${product.price}</span>
+            <span className="product-price">{Math.round(product.price)} ₴</span>
           </p>
         </div>
         <button className="add-to-cart-btn" onClick={handleAddToCart}>

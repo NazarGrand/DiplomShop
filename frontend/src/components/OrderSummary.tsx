@@ -14,9 +14,9 @@ const OrderSummary = (): JSX.Element => {
   const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
 
   const savings = subtotal - total;
-  const formattedSubtotal = subtotal.toFixed(2);
-  const formattedTotal = total.toFixed(2);
-  const formattedSavings = savings.toFixed(2);
+  const formattedSubtotal = Math.round(subtotal);
+  const formattedTotal = Math.round(total);
+  const formattedSavings = Math.round(savings);
 
   const handlePayment = async (): Promise<void> => {
     const stripe: Stripe | null = await stripePromise;
@@ -158,13 +158,13 @@ const OrderSummary = (): JSX.Element => {
         <div className="order-items">
           <dl className="order-row">
             <dt className="order-label">Початкова ціна</dt>
-            <dd className="order-value">${formattedSubtotal}</dd>
+            <dd className="order-value">{formattedSubtotal} ₴</dd>
           </dl>
 
           {savings > 0 && (
             <dl className="order-row savings">
               <dt className="order-label">Економія</dt>
-              <dd className="order-value">-${formattedSavings}</dd>
+              <dd className="order-value">-{formattedSavings} ₴</dd>
             </dl>
           )}
 
@@ -177,7 +177,7 @@ const OrderSummary = (): JSX.Element => {
 
           <dl className="order-row total">
             <dt className="order-label">До сплати</dt>
-            <dd className="order-value">${formattedTotal}</dd>
+            <dd className="order-value">{formattedTotal} ₴</dd>
           </dl>
         </div>
       </div>

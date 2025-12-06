@@ -586,7 +586,7 @@ const ProductPage = (): JSX.Element => {
             </div>
 
             <div className="product-price">
-              ${currentProduct.price.toFixed(2)}
+              {Math.round(currentProduct.price)} ₴
             </div>
 
             <p className="product-description">{currentProduct.description}</p>
@@ -867,7 +867,7 @@ const ProductPage = (): JSX.Element => {
             <div className="section-content">
               <div className="benefit-item">
                 <CheckCircle className="benefit-icon" size={18} />
-                <span>Безкоштовна доставка при замовленні від $1000</span>
+                <span>Безкоштовна доставка при замовленні від 1000 грн</span>
               </div>
               <div className="benefit-item">
                 <CheckCircle className="benefit-icon" size={18} />

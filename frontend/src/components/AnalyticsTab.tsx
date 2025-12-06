@@ -147,7 +147,7 @@ const AnalyticsTab = (): JSX.Element => {
         />
         <AnalyticsCard
           title="Загальний дохід"
-          value={`$${analyticsData.totalRevenue.toLocaleString()}`}
+          value={`${Math.round(analyticsData.totalRevenue).toLocaleString()} ₴`}
           icon={DollarSign}
           color="from-emerald-500 to-lime-700"
         />
@@ -197,7 +197,7 @@ const AnalyticsTab = (): JSX.Element => {
                 dataKey="revenue"
                 stroke="#3B82F6"
                 activeDot={{ r: 8 }}
-                name="Дохід ($)"
+                name="Дохід (₴)"
               />
             </LineChart>
           </ResponsiveContainer>

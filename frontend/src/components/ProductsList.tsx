@@ -162,7 +162,7 @@ const ProductsList = (): JSX.Element => {
                   </div>
                 </td>
                 <td className="table-cell">
-                  <div className="product-price">${product.price.toFixed(2)}</div>
+                  <div className="product-price">{Math.round(product.price)} ₴</div>
                 </td>
                 <td className="table-cell">
                   <div className="product-category">{product.category}</div>
