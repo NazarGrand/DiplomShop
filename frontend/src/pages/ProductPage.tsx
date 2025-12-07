@@ -51,6 +51,7 @@ const ProductPage = (): JSX.Element => {
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number>(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [specificationsExpanded, setSpecificationsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -596,19 +597,49 @@ const ProductPage = (): JSX.Element => {
                 <Box
                   sx={{
                     mt: 2,
-                    ".specifications-title": {
-                      fontSize: "1.25rem",
-                      fontWeight: 700,
-                      color: "emerald400",
-                      mb: 3,
+                    ".specifications-header": {
                       display: "flex",
                       alignItems: "center",
-                      gap: 2,
+                      justifyContent: "space-between",
+                      cursor: "pointer",
+                      py: 2,
+                      px: 3,
+                      bg: "gray800",
+                      borderRadius: "md",
+                      border: "1px solid",
+                      borderColor: "gray700",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        bg: "gray750",
+                        borderColor: "emerald500",
+                      },
+                      ".specifications-title": {
+                        fontSize: "1.25rem",
+                        fontWeight: 700,
+                        color: "emerald400",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                      },
+                      ".specifications-icon": {
+                        transition: "transform 0.3s ease",
+                        color: "emerald400",
+                        "&.expanded": {
+                          transform: "rotate(180deg)",
+                        },
+                      },
                     },
                     ".specifications-list": {
+                      maxHeight: 0,
+                      overflow: "hidden",
+                      transition: "max-height 0.3s ease, padding 0.3s ease",
                       display: "flex",
                       flexDirection: "column",
                       gap: 2,
+                      "&.expanded": {
+                        maxHeight: "1000px",
+                        mt: 2,
+                      },
                       ".spec-item": {
                         display: "flex",
                         justifyContent: "space-between",
@@ -633,11 +664,20 @@ const ProductPage = (): JSX.Element => {
                     },
                   }}
                 >
-                  <h3 className="specifications-title">
-                    <Info size={20} />
-                    Характеристики
-                  </h3>
-                  <div className="specifications-list">
+                  <div
+                    className="specifications-header"
+                    onClick={() => setSpecificationsExpanded(!specificationsExpanded)}
+                  >
+                    <h3 className="specifications-title">
+                      <Info size={20} />
+                      Характеристики
+                    </h3>
+                    <ChevronDown
+                      className={`specifications-icon ${specificationsExpanded ? "expanded" : ""}`}
+                      size={20}
+                    />
+                  </div>
+                  <div className={`specifications-list ${specificationsExpanded ? "expanded" : ""}`}>
                     {currentProduct.specifications.map((spec, index) => (
                       <div key={index} className="spec-item">
                         <span className="spec-name">{spec.name}</span>

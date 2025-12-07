@@ -77,26 +77,23 @@ export const useUserStore = create<UserStore>((set, get) => ({
 	},
 
 	refreshToken: async () => {
-		if (get().checkingAuth) {
-			// Wait for current auth check to complete
-			return new Promise((resolve) => {
-				const checkInterval = setInterval(() => {
-					if (!get().checkingAuth) {
-						clearInterval(checkInterval);
-						resolve(null);
-					}
-				}, 100);
-			});
+		// Don't block if checkingAuth is true - we need to refresh token during auth check
+		const wasCheckingAuth = get().checkingAuth;
+		if (!wasCheckingAuth) {
+			set({ checkingAuth: true });
 		}
-
-		set({ checkingAuth: true });
+		
 		try {
 			const response = await axios.get("/auth/refresh");
-			set({ checkingAuth: false });
+			if (!wasCheckingAuth) {
+				set({ checkingAuth: false });
+			}
 			return response.data;
 		} catch (error: any) {
 			console.error("Refresh token error:", error.response?.data || error.message);
-			set({ user: null, checkingAuth: false });
+			if (!wasCheckingAuth) {
+				set({ user: null, checkingAuth: false });
+			}
 			throw error;
 		}
 	},
@@ -128,7 +125,10 @@ axios.interceptors.response.use(
 			} catch (refreshError: any) {
 				console.error("Refresh token failed:", refreshError.response?.data || refreshError.message);
 				refreshPromise = null;
-				useUserStore.getState().logout();
+				// Don't logout if we're checking auth - let checkAuth handle it
+				if (!useUserStore.getState().checkingAuth) {
+					useUserStore.getState().logout();
+				}
 				return Promise.reject(refreshError);
 			}
 		}
