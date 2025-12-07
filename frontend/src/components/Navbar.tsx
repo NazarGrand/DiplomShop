@@ -1,15 +1,17 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
-import { ShoppingCart, UserPlus, LogIn, LogOut, Grid3x3 } from "lucide-react";
+import { ShoppingCart, UserPlus, LogIn, LogOut, Grid3x3, Scale } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import { useCompareStore } from "../stores/useCompareStore";
 import { MouseEvent } from "react";
 
 const Navbar = (): JSX.Element => {
   const { user, logout } = useUserStore();
   const { cart } = useCartStore();
+  const { compareProducts } = useCompareStore();
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
@@ -198,6 +200,15 @@ const Navbar = (): JSX.Element => {
                 <span className="cart-text">Кошик</span>
                 {cart.length > 0 && (
                   <span className="cart-badge">{cart.length}</span>
+                )}
+              </Link>
+            )}
+            {compareProducts.length > 0 && (
+              <Link to="/compare" className="cart-link">
+                <Scale className="cart-icon" size={20} />
+                <span className="cart-text">Порівняти</span>
+                {compareProducts.length > 0 && (
+                  <span className="cart-badge">{compareProducts.length}</span>
                 )}
               </Link>
             )}

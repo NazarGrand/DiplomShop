@@ -19,6 +19,7 @@ import CartPage from "./pages/CartPage";
 import { useCartStore } from "./stores/useCartStore";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 import PurchaseCancelPage from "./pages/PurchaseCancelPage";
+import ComparePage from "./pages/ComparePage";
 
 function App(): JSX.Element {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -117,6 +118,7 @@ function App(): JSX.Element {
               path="/purchase-cancel"
               element={user ? <PurchaseCancelPage /> : <Navigate to="/login" />}
             />
+            <Route path="/compare" element={<ComparePage />} />
           </Routes>
         </Box>
         <Footer />

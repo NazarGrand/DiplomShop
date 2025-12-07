@@ -1,10 +1,11 @@
 /** @jsxImportSource theme-ui */
 import toast from "react-hot-toast";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Scale } from "lucide-react";
 import { Box } from "theme-ui";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+import { useCompareStore } from "../stores/useCompareStore";
 import { Product } from "../types";
 import { MouseEvent } from "react";
 
@@ -15,6 +16,10 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
   const { user } = useUserStore();
   const { addToCart } = useCartStore();
+  const { addToCompare, removeFromCompare, compareProducts, canAddProduct } = useCompareStore();
+  
+  const isInCompare = compareProducts.some((p) => p._id === product._id);
+  const canAdd = canAddProduct(product);
 
   const productImage =
     product.images && product.images.length > 0
@@ -31,6 +36,27 @@ const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
       return;
     } else {
       addToCart(product);
+    }
+  };
+
+  const handleCompareToggle = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isInCompare) {
+      removeFromCompare(product._id);
+      toast.success("Товар видалено з порівняння");
+    } else {
+      if (!canAdd) {
+        if (compareProducts.length >= 2) {
+          toast.error("Можна порівняти максимум 2 товари");
+        } else if (compareProducts.length > 0 && compareProducts[0].category !== product.category) {
+          toast.error("Можна порівняти тільки товари з однієї категорії");
+        }
+        return;
+      }
+      addToCompare(product);
+      toast.success("Товар додано до порівняння");
     }
   };
 
@@ -72,6 +98,29 @@ const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
             position: "absolute",
             inset: 0,
             bg: "rgba(0, 0, 0, 0.2)",
+          },
+          ".compare-button": {
+            position: "absolute",
+            top: 2,
+            right: 2,
+            p: 2,
+            bg: isInCompare ? "emerald600" : "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            border: "none",
+            borderRadius: "full",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s ease",
+            zIndex: 10,
+            "&:hover": {
+              bg: isInCompare ? "emerald700" : "rgba(0, 0, 0, 0.9)",
+            },
+            "&:disabled": {
+              opacity: 0.5,
+              cursor: "not-allowed",
+            },
           },
         },
         ".product-content": {
@@ -140,6 +189,15 @@ const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
             alt={product.name || "product image"}
           />
           <div className="product-overlay" />
+          <button
+            className="compare-button"
+            onClick={handleCompareToggle}
+            disabled={!canAdd && !isInCompare}
+            aria-label={isInCompare ? "Видалити з порівняння" : "Додати до порівняння"}
+            title={isInCompare ? "Видалити з порівняння" : "Додати до порівняння"}
+          >
+            <Scale size={18} />
+          </button>
         </div>
       </Link>
 

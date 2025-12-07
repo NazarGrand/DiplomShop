@@ -51,7 +51,8 @@ const ProductPage = (): JSX.Element => {
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
   const [lightboxImageIndex, setLightboxImageIndex] = useState<number>(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const [specificationsExpanded, setSpecificationsExpanded] = useState<boolean>(false);
+  const [specificationsExpanded, setSpecificationsExpanded] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -150,18 +151,21 @@ const ProductPage = (): JSX.Element => {
           ? currentProduct.images[0]
           : currentProduct.image || "";
 
-      const res = await axios.post<{ id: string }>("/payments/create-checkout-session", {
-        products: [
-          {
-            _id: currentProduct._id,
-            name: currentProduct.name,
-            price: currentProduct.price,
-            image: productImage,
-            quantity: quantity,
-          },
-        ],
-        couponCode: null,
-      });
+      const res = await axios.post<{ id: string }>(
+        "/payments/create-checkout-session",
+        {
+          products: [
+            {
+              _id: currentProduct._id,
+              name: currentProduct.name,
+              price: currentProduct.price,
+              image: productImage,
+              quantity: quantity,
+            },
+          ],
+          couponCode: null,
+        }
+      );
 
       const session = res.data;
       const result = await stripe.redirectToCheckout({
@@ -611,7 +615,7 @@ const ProductPage = (): JSX.Element => {
                       transition: "all 0.2s ease",
                       "&:hover": {
                         bg: "gray750",
-                        borderColor: "emerald500",
+                        borderColor: "#3f5f9a",
                       },
                       ".specifications-title": {
                         fontSize: "1.25rem",
@@ -666,18 +670,26 @@ const ProductPage = (): JSX.Element => {
                 >
                   <div
                     className="specifications-header"
-                    onClick={() => setSpecificationsExpanded(!specificationsExpanded)}
+                    onClick={() =>
+                      setSpecificationsExpanded(!specificationsExpanded)
+                    }
                   >
                     <h3 className="specifications-title">
                       <Info size={20} />
                       Характеристики
                     </h3>
                     <ChevronDown
-                      className={`specifications-icon ${specificationsExpanded ? "expanded" : ""}`}
+                      className={`specifications-icon ${
+                        specificationsExpanded ? "expanded" : ""
+                      }`}
                       size={20}
                     />
                   </div>
-                  <div className={`specifications-list ${specificationsExpanded ? "expanded" : ""}`}>
+                  <div
+                    className={`specifications-list ${
+                      specificationsExpanded ? "expanded" : ""
+                    }`}
+                  >
                     {currentProduct.specifications.map((spec, index) => (
                       <div key={index} className="spec-item">
                         <span className="spec-name">{spec.name}</span>
@@ -1142,4 +1154,3 @@ const ProductPage = (): JSX.Element => {
 };
 
 export default ProductPage;
-
