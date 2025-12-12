@@ -1,10 +1,15 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingCart, ChevronLeft, ChevronRight, Scale } from "lucide-react";
 import { Box } from "theme-ui";
+import { Link } from "react-router-dom";
 import { useCartStore } from "../stores/useCartStore";
+import { useCompareStore } from "../stores/useCompareStore";
+import { useUserStore } from "../stores/useUserStore";
 import { Product } from "../types";
+import { MouseEvent } from "react";
+import toast from "react-hot-toast";
 
 interface FeaturedProductsProps {
   featuredProducts: Product[];
@@ -17,6 +22,8 @@ const FeaturedProducts = ({
   const [itemsPerPage, setItemsPerPage] = useState<number>(4);
 
   const { addToCart } = useCartStore();
+  const { addToCompare, compareProducts, canAddProduct } = useCompareStore();
+  const { user } = useUserStore();
 
   useEffect(() => {
     const handleResize = (): void => {
@@ -41,6 +48,53 @@ const FeaturedProducts = ({
 
   const isStartDisabled = currentIndex === 0;
   const isEndDisabled = currentIndex >= featuredProducts.length - itemsPerPage;
+
+  const handleAddToCart = (
+    product: Product,
+    e: MouseEvent<HTMLButtonElement>
+  ): void => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.error("Будь ласка, увійдіть, щоб додати товари до кошика", {
+        id: "login",
+      });
+      return;
+    } else {
+      addToCart(product);
+    }
+  };
+
+  const handleCompareToggle = (
+    product: Product,
+    e: MouseEvent<HTMLButtonElement>
+  ): void => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const isInCompare = compareProducts.some((p) => p._id === product._id);
+    const canAdd = canAddProduct(product);
+
+    if (isInCompare) {
+      toast.success("Товар вже додано до порівняння");
+      return;
+    }
+
+    if (!canAdd) {
+      if (compareProducts.length >= 2) {
+        toast.error("Можна порівняти максимум 2 товари");
+      } else if (
+        compareProducts.length > 0 &&
+        compareProducts[0].category !== product.category
+      ) {
+        toast.error("Можна порівняти тільки товари з однієї категорії");
+      }
+      return;
+    }
+
+    addToCompare(product);
+    toast.success("Товар додано до порівняння");
+  };
 
   return (
     <Box
@@ -78,6 +132,10 @@ const FeaturedProducts = ({
                     p: 4,
                     border: "1px solid",
                     borderColor: "gray700",
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    position: "relative",
                     ".product-image-wrapper": {
                       position: "relative",
                       width: "100%",
@@ -85,10 +143,15 @@ const FeaturedProducts = ({
                       mb: 3,
                       borderRadius: "md",
                       overflow: "hidden",
+                      cursor: "pointer",
                       ".product-image": {
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
+                        transition: "transform 0.3s ease",
+                      },
+                      "&:hover .product-image": {
+                        transform: "scale(1.05)",
                       },
                     },
                     ".product-name": {
@@ -96,12 +159,46 @@ const FeaturedProducts = ({
                       fontWeight: 700,
                       color: "white",
                       mb: 2,
+                      cursor: "pointer",
+                      transition: "color 0.2s ease",
+                      textDecoration: "none",
+                      display: "block",
+                      flex: "0 0 auto",
+                      "&:hover": {
+                        color: "emerald400",
+                      },
                     },
                     ".product-price": {
                       fontSize: "1.5rem",
                       fontWeight: 700,
                       color: "emerald400",
                       mb: 3,
+                      mt: "auto",
+                    },
+                    ".compare-button": {
+                      position: "absolute",
+                      top: 2,
+                      right: 2,
+                      p: 2,
+                      bg: "rgba(0, 0, 0, 0.7)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "full",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      transition: "all 0.2s ease",
+                      zIndex: 10,
+                      "&:hover": {
+                        bg: "rgba(0, 0, 0, 0.9)",
+                      },
+                      "&.in-compare": {
+                        bg: "#3f5f9a",
+                        "&:hover": {
+                          bg: "#324a7c",
+                        },
+                      },
                     },
                     ".add-to-cart-button": {
                       display: "flex",
@@ -116,6 +213,7 @@ const FeaturedProducts = ({
                       borderRadius: "md",
                       border: "none",
                       cursor: "pointer",
+                      mt: "auto",
                       "&:hover": {
                         bg: "#324a7c",
                       },
@@ -172,6 +270,7 @@ const FeaturedProducts = ({
                 }, calc((100% - ${
                   (itemsPerPage - 1) * 16
                 }px) / ${itemsPerPage}))`,
+                alignItems: "stretch",
               }}
             >
               {featuredProducts.map((product) => {
@@ -180,23 +279,48 @@ const FeaturedProducts = ({
                     ? product.images[0]
                     : product.image || "";
 
+                const isInCompare = compareProducts.some(
+                  (p) => p._id === product._id
+                );
+                const canAdd = canAddProduct(product);
+
                 return (
                   <div key={product._id} className="carousel-item">
                     <div className="product-card">
-                      <div className="product-image-wrapper">
-                        <img
-                          src={productImage}
-                          alt={product.name}
-                          className="product-image"
-                        />
-                      </div>
-                      <h3 className="product-name">{product.name}</h3>
+                      <button
+                        className={`compare-button ${
+                          isInCompare ? "in-compare" : ""
+                        }`}
+                        onClick={(e) => handleCompareToggle(product, e)}
+                        disabled={!canAdd && !isInCompare}
+                        aria-label="Додати до порівняння"
+                        title="Додати до порівняння"
+                      >
+                        <Scale size={18} />
+                      </button>
+                      <Link
+                        to={`/product/${product._id}`}
+                        style={{
+                          textDecoration: "none",
+                          display: "block",
+                          flex: "1 1 auto",
+                        }}
+                      >
+                        <div className="product-image-wrapper">
+                          <img
+                            src={productImage}
+                            alt={product.name}
+                            className="product-image"
+                          />
+                        </div>
+                        <h3 className="product-name">{product.name}</h3>
+                      </Link>
                       <p className="product-price">
                         {Math.round(product.price)} ₴
                       </p>
                       <button
                         className="add-to-cart-button"
-                        onClick={() => addToCart(product)}
+                        onClick={(e) => handleAddToCart(product, e)}
                       >
                         <ShoppingCart size={20} />
                         Додати до кошика

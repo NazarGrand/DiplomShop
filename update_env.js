@@ -30,3 +30,6 @@ fs.writeFileSync(envPath, envContent, 'utf8');
 console.log('✅ Updated backend/.env with ngrok URL');
 console.log(`FRONTEND_URL=${ngrokUrl}`);
 
+
+
+

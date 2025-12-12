@@ -1,5 +1,5 @@
 /** @jsxImportSource theme-ui */
-import { useEffect, useState, MouseEvent, ChangeEvent } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Box } from "theme-ui";
@@ -21,10 +21,12 @@ import {
   HelpCircle,
   CheckCircle,
   ChevronDown,
+  Scale,
 } from "lucide-react";
 import { useProductStore } from "../stores/useProductStore";
 import { useCartStore } from "../stores/useCartStore";
 import { useUserStore } from "../stores/useUserStore";
+import { useCompareStore } from "../stores/useCompareStore";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import axios from "../lib/axios";
 import { getCategoryName } from "../utils/categoryNames";
@@ -46,6 +48,8 @@ const ProductPage = (): JSX.Element => {
   const { fetchProductById, currentProduct, loading } = useProductStore();
   const { addToCart } = useCartStore();
   const { user } = useUserStore();
+  const { addToCompare, removeFromCompare, compareProducts, canAddProduct } =
+    useCompareStore();
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
   const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
@@ -97,6 +101,39 @@ const ProductPage = (): JSX.Element => {
       toast.success(`Додано ${quantity} шт. до кошика`);
       setQuantity(1);
     }
+  };
+
+  const handleCompareToggle = (e: MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!currentProduct) return;
+
+    const isInCompare = compareProducts.some(
+      (p) => p._id === currentProduct._id
+    );
+    const canAdd = canAddProduct(currentProduct);
+
+    if (isInCompare) {
+      removeFromCompare(currentProduct._id);
+      toast.success("Товар видалено з порівняння");
+      return;
+    }
+
+    if (!canAdd) {
+      if (compareProducts.length >= 2) {
+        toast.error("Можна порівняти максимум 2 товари");
+      } else if (
+        compareProducts.length > 0 &&
+        compareProducts[0].category !== currentProduct.category
+      ) {
+        toast.error("Можна порівняти тільки товари з однієї категорії");
+      }
+      return;
+    }
+
+    addToCompare(currentProduct);
+    toast.success("Товар додано до порівняння");
   };
 
   const openLightbox = (index: number): void => {
@@ -725,6 +762,75 @@ const ProductPage = (): JSX.Element => {
               <button className="add-to-cart-button" onClick={handleAddToCart}>
                 <ShoppingCart size={22} />
                 Додати до кошика ({quantity} шт.)
+              </button>
+
+              <button
+                className="compare-button"
+                onClick={handleCompareToggle}
+                disabled={
+                  !canAddProduct(currentProduct!) &&
+                  !compareProducts.some((p) => p._id === currentProduct?._id)
+                }
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  width: "100%",
+                  padding: "0.75rem 1rem",
+                  backgroundColor: compareProducts.some(
+                    (p) => p._id === currentProduct?._id
+                  )
+                    ? "#3f5f9a"
+                    : "#374151",
+                  color: "white",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  borderRadius: "0.5rem",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  opacity:
+                    !canAddProduct(currentProduct!) &&
+                    !compareProducts.some((p) => p._id === currentProduct?._id)
+                      ? 0.5
+                      : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (
+                    !(
+                      !canAddProduct(currentProduct!) &&
+                      !compareProducts.some(
+                        (p) => p._id === currentProduct?._id
+                      )
+                    )
+                  ) {
+                    e.currentTarget.style.backgroundColor =
+                      compareProducts.some((p) => p._id === currentProduct?._id)
+                        ? "#324a7c"
+                        : "#4B5563";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = compareProducts.some(
+                    (p) => p._id === currentProduct?._id
+                  )
+                    ? "#3f5f9a"
+                    : "#374151";
+                }}
+              >
+                <Scale size={22} />
+                {compareProducts.some((p) => p._id === currentProduct?._id) ? (
+                  <>
+                    <X size={22} />
+                    Видалити з порівняння
+                  </>
+                ) : (
+                  <>
+                    <Scale size={22} />
+                    Додати до порівняння
+                  </>
+                )}
               </button>
 
               <Box

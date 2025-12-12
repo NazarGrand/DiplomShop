@@ -23,3 +23,6 @@ npm run ngrok
 📝 Якщо URL змінився, оновіть backend/.env:
 FRONTEND_URL=новый_ngrok_url
 
+
+
+
