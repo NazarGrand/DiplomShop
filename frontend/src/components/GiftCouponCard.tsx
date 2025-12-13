@@ -96,7 +96,6 @@ const GiftCouponCard = (): JSX.Element => {
           },
         },
         ".applied-coupon": {
-          mt: 4,
           ".applied-title": {
             fontSize: "1.125rem",
             fontWeight: 500,
@@ -116,7 +115,7 @@ const GiftCouponCard = (): JSX.Element => {
             borderRadius: "lg",
             bg: "#DC2626",
             px: 5,
-            py: 2.5,
+            py: 3,
             fontSize: "0.875rem",
             fontWeight: 500,
             color: "white",
@@ -205,4 +204,3 @@ const GiftCouponCard = (): JSX.Element => {
 };
 
 export default GiftCouponCard;
-

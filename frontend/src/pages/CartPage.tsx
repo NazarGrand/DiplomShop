@@ -55,19 +55,6 @@ const CartPage = (): JSX.Element => {
               },
             },
           },
-          ".cart-header": {
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            mb: 4,
-            ".cart-title": {
-              fontSize: "2rem",
-              fontWeight: 900,
-              color: "emerald400",
-              fontFamily: "oswald",
-              letterSpacing: "1px",
-            },
-          },
           ".empty-cart": {
             textAlign: "center",
             py: 12,
@@ -101,16 +88,6 @@ const CartPage = (): JSX.Element => {
       }}
     >
       <div className="cart-container">
-        <motion.div
-          className="cart-header"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <ShoppingCart size={32} />
-          <h1 className="cart-title">Кошик</h1>
-        </motion.div>
-
         {cart.length === 0 ? (
           <motion.div
             className="empty-cart"
@@ -150,16 +127,15 @@ const CartPage = (): JSX.Element => {
             </div>
           </motion.div>
         )}
-
-        {cart.length > 0 && (
-          <Box sx={{ mt: 8 }}>
-            <PeopleAlsoBought />
-          </Box>
-        )}
       </div>
+
+      {cart.length > 0 && (
+        <Box sx={{ px: 5 }}>
+          <PeopleAlsoBought />
+        </Box>
+      )}
     </Box>
   );
 };
 
 export default CartPage;
-
