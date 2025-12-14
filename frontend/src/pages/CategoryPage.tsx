@@ -6,16 +6,15 @@ import { motion } from "framer-motion";
 import { Box } from "theme-ui";
 import ProductCard from "../components/ProductCard";
 import { getCategoryName } from "../utils/categoryNames";
-import {
-  Search,
-  SlidersHorizontal,
-  X,
-  ArrowUpDown,
-  Star,
-} from "lucide-react";
+import { Search, SlidersHorizontal, X, ArrowUpDown, Star } from "lucide-react";
 import { Product } from "../types";
 
-type SortOption = "default" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
+type SortOption =
+  | "default"
+  | "price-asc"
+  | "price-desc"
+  | "name-asc"
+  | "name-desc";
 
 const CategoryPage = (): JSX.Element => {
   const { fetchProductsByCategory, products } = useProductStore();
@@ -45,10 +44,14 @@ const CategoryPage = (): JSX.Element => {
     }
 
     if (minPrice) {
-      filtered = filtered.filter((product) => product.price >= Number(minPrice));
+      filtered = filtered.filter(
+        (product) => product.price >= Number(minPrice)
+      );
     }
     if (maxPrice) {
-      filtered = filtered.filter((product) => product.price <= Number(maxPrice));
+      filtered = filtered.filter(
+        (product) => product.price <= Number(maxPrice)
+      );
     }
 
     if (showFeaturedOnly) {
@@ -93,7 +96,11 @@ const CategoryPage = (): JSX.Element => {
   };
 
   const hasActiveFilters =
-    searchQuery || minPrice || maxPrice || sortBy !== "default" || showFeaturedOnly;
+    searchQuery ||
+    minPrice ||
+    maxPrice ||
+    sortBy !== "default" ||
+    showFeaturedOnly;
 
   return (
     <Box
@@ -105,7 +112,7 @@ const CategoryPage = (): JSX.Element => {
           maxWidth: "1280px",
           mx: "auto",
           px: ["1rem", "1.5rem", "2rem"],
-          py: 4,
+          py: [5, 4],
           ".category-title": {
             textAlign: "center",
             fontSize: ["2.3rem", "3rem"],
@@ -241,7 +248,12 @@ const CategoryPage = (): JSX.Element => {
               },
               ".filters-content": {
                 display: "grid",
-                gridTemplateColumns: ["1fr", "1fr", "repeat(2, 1fr)", "repeat(3, 1fr)"],
+                gridTemplateColumns: [
+                  "1fr",
+                  "1fr",
+                  "repeat(2, 1fr)",
+                  "repeat(3, 1fr)",
+                ],
                 gap: 4,
                 ".filter-group": {
                   ".filter-label": {
@@ -486,4 +498,3 @@ const CategoryPage = (): JSX.Element => {
 };
 
 export default CategoryPage;
-

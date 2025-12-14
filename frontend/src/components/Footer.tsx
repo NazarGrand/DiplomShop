@@ -113,7 +113,7 @@ const Footer = (): JSX.Element => {
             pt: 4,
             borderTop: "1px solid",
             borderColor: "gray700",
-            display: "flex",
+            display: ["none", "flex"],
             flexDirection: ["column", "row"],
             alignItems: "center",
             justifyContent: "space-between",
@@ -232,4 +232,3 @@ const Footer = (): JSX.Element => {
 };
 
 export default Footer;
-

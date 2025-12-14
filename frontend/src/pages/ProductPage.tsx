@@ -329,7 +329,7 @@ const ProductPage = (): JSX.Element => {
           ".product-content": {
             display: "grid",
             gridTemplateColumns: ["1fr", "1fr", "1fr 1fr"],
-            gap: 6,
+            gap: [4, 6],
             mb: 5,
             ".product-images": {
               ".image-slider": {

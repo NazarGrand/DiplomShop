@@ -1,6 +1,13 @@
 /** @jsxImportSource theme-ui */
 import classNames from "classnames";
-import { ShoppingCart, UserPlus, LogIn, LogOut, Grid3x3, Scale } from "lucide-react";
+import {
+  ShoppingCart,
+  UserPlus,
+  LogIn,
+  LogOut,
+  Grid3x3,
+  Scale,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Box } from "theme-ui";
 import { useUserStore } from "../stores/useUserStore";
@@ -20,7 +27,10 @@ const Navbar = (): JSX.Element => {
     if (isHomePage) {
       const categoriesSection = document.getElementById("categories-section");
       if (categoriesSection) {
-        categoriesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        categoriesSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }
     }
   };
@@ -71,7 +81,7 @@ const Navbar = (): JSX.Element => {
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
-              gap: 4,
+              gap: [3, 4],
               ".nav-link": {
                 color: "gray300",
                 textDecoration: "none",
@@ -246,4 +256,3 @@ const Navbar = (): JSX.Element => {
 };
 
 export default Navbar;
-
