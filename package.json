@@ -9,6 +9,7 @@
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
     "convert-prices": "node backend/scripts/convertPricesToUAH.js",
     "reconvert-prices": "node backend/scripts/reconvertPrices.js",
+    "convert-orders": "node backend/scripts/convertOrdersToUAH.js",
     "ngrok": "node start-ngrok.js",
     "ngrok-direct": "ngrok http 5173"
   },
