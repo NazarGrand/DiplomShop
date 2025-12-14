@@ -9,6 +9,7 @@ import itemRoutes from "./routes/item.route.js";
 import shoppingCartRoutes from "./routes/shoppingCart.route.js";
 import discountRoutes from "./routes/discount.route.js";
 import checkoutRoutes from "./routes/checkout.route.js";
+import paymentRoutes from "./routes/payment.route.js";
 import statisticsRoutes from "./routes/statistics.route.js";
 
 import { initializeDatabase } from "./lib/databaseConnection.js";
@@ -57,7 +58,7 @@ app.use("/api/auth", userAuthRoutes);
 app.use("/api/products", itemRoutes);
 app.use("/api/cart", shoppingCartRoutes);
 app.use("/api/coupons", discountRoutes);
-app.use("/api/payments", checkoutRoutes);
+app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", statisticsRoutes);
 
 if (process.env.NODE_ENV === "production") {

@@ -15,12 +15,20 @@ const PurchaseSuccessPage = (): JSX.Element => {
   useEffect(() => {
     const handleCheckoutSuccess = async (sessionId: string): Promise<void> => {
       try {
-        await axios.post("/payments/checkout-success", {
+        console.log("=== FRONTEND: Calling checkout-success ===");
+        console.log("Session ID:", sessionId);
+        
+        const response = await axios.post("/payments/checkout-success", {
           sessionId,
         });
+        
+        console.log("✅ Checkout success response:", response.data);
         clearCart();
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        console.error("❌ Error in checkout success:", error);
+        console.error("Error response:", error.response?.data);
+        console.error("Error message:", error.message);
+        setError(error.response?.data?.message || error.message || "Помилка при обробці замовлення");
       } finally {
         setIsProcessing(false);
       }
@@ -29,9 +37,12 @@ const PurchaseSuccessPage = (): JSX.Element => {
     const sessionId = new URLSearchParams(window.location.search).get(
       "session_id"
     );
+    console.log("Session ID from URL:", sessionId);
+    
     if (sessionId) {
       handleCheckoutSuccess(sessionId);
     } else {
+      console.error("❌ No session ID found in URL");
       setIsProcessing(false);
       setError("No session ID found in the URL");
     }

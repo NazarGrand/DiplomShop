@@ -75,10 +75,35 @@ export const createCheckoutSession = async (req, res) => {
 
 export const checkoutSuccess = async (req, res) => {
 	try {
+		console.log("=== CHECKOUT SUCCESS CALLED ===");
 		const { sessionId } = req.body;
+		console.log("Session ID:", sessionId);
+
+		if (!sessionId) {
+			console.error("❌ No sessionId provided");
+			return res.status(400).json({ message: "Session ID is required" });
+		}
+
 		const session = await stripe.checkout.sessions.retrieve(sessionId);
+		console.log("Session retrieved:", {
+			id: session.id,
+			payment_status: session.payment_status,
+			amount_total: session.amount_total,
+			metadata: session.metadata,
+		});
 
 		if (session.payment_status === "paid") {
+			// Check if order already exists
+			const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+			if (existingOrder) {
+				console.log("⚠️ Order already exists for this session:", existingOrder._id);
+				return res.status(200).json({
+					success: true,
+					message: "Order already exists",
+					orderId: existingOrder._id,
+				});
+			}
+
 			if (session.metadata.couponCode) {
 				await Coupon.findOneAndUpdate(
 					{
@@ -89,12 +114,32 @@ export const checkoutSuccess = async (req, res) => {
 						isActive: false,
 					}
 				);
+				console.log("✅ Coupon deactivated");
 			}
+
+			// Verify user exists
+			const mongoose = (await import("mongoose")).default;
+			const Customer = (await import("../models/customer.model.js")).default;
+			
+			const userId = session.metadata.userId;
+			console.log("User ID from metadata:", userId);
+			
+			const userExists = await Customer.findById(userId);
+			if (!userExists) {
+				console.error("❌ User not found in database:", userId);
+				return res.status(400).json({ 
+					message: "User not found",
+					error: "The user associated with this order does not exist"
+				});
+			}
+			console.log("✅ User found:", userExists.email);
 
 			// create a new Order
 			const products = JSON.parse(session.metadata.products);
+			console.log("Products from metadata:", products);
+
 			const newOrder = new Order({
-				user: session.metadata.userId,
+				user: userId,
 				products: products.map((product) => ({
 					product: product.id,
 					quantity: product.quantity,
@@ -104,16 +149,49 @@ export const checkoutSuccess = async (req, res) => {
 				stripeSessionId: sessionId,
 			});
 
-			await newOrder.save();
+			console.log("Attempting to save order:", {
+				user: newOrder.user,
+				totalAmount: newOrder.totalAmount,
+				productsCount: newOrder.products.length,
+				stripeSessionId: newOrder.stripeSessionId,
+			});
 
-			res.status(200).json({
-				success: true,
-				message: "Payment successful, order created, and coupon deactivated if used.",
-				orderId: newOrder._id,
+			try {
+				await newOrder.save();
+				console.log("✅ Order created successfully:", newOrder._id);
+				console.log("Order details:", {
+					_id: newOrder._id,
+					user: newOrder.user,
+					totalAmount: newOrder.totalAmount,
+					productsCount: newOrder.products.length,
+					createdAt: newOrder.createdAt,
+				});
+
+				res.status(200).json({
+					success: true,
+					message: "Payment successful, order created, and coupon deactivated if used.",
+					orderId: newOrder._id,
+				});
+			} catch (saveError) {
+				console.error("❌ Error saving order:", saveError);
+				console.error("Error details:", {
+					message: saveError.message,
+					name: saveError.name,
+					code: saveError.code,
+					stack: saveError.stack,
+				});
+				throw saveError;
+			}
+		} else {
+			console.warn("⚠️ Payment status is not 'paid':", session.payment_status);
+			res.status(400).json({
+				success: false,
+				message: `Payment status is ${session.payment_status}, not paid`,
 			});
 		}
 	} catch (error) {
-		console.error("Error processing successful checkout:", error);
+		console.error("❌ Error processing successful checkout:", error);
+		console.error("Error stack:", error.stack);
 		res.status(500).json({ message: "Error processing successful checkout", error: error.message });
 	}
 };
